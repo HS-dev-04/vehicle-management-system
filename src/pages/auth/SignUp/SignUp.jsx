@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../../redux/slices/authSignup";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../../../public/Firebase";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const SignUp = () => {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,7 +24,6 @@ const SignUp = () => {
     contact: "",
     role: "",
   });
-  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -25,30 +32,63 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
+      setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+      toast.error("Password must be at least 6 characters");
+        setLoading(false);
       return;
     }
-    dispatch(
-      signup({
+
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      await setDoc(doc(db, "users", formData.email), {
         name: formData.name,
         email: formData.email,
-        password: formData.password,
         address: formData.address,
         contact: formData.contact,
         role: formData.role,
-      })
-    );
+        uid: userCredential.user.uid,
+        createdAt: new Date(),
+      });
 
-    // Navigate to login
-    // navigate('/login');
+      dispatch(
+        signup({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          address: formData.address,
+          contact: formData.contact,
+          role: formData.role,
+        })
+      );
+      toast.success("Account created successfully!");
+setTimeout(() => {
+  navigate("/login");
+}, 4000);
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("This email already exists");
+      } else {
+        toast.error("Signup error: " + error.message);
+      }
+      console.error("Signup error:", error.message);
+    }finally{
+          setLoading(false);
+    }
   };
 
   return (
@@ -56,12 +96,10 @@ const SignUp = () => {
       <Card className="w-100" style={{ maxWidth: "500px" }}>
         <Card.Body>
           <h2 className="text-center mb-3">Sign Up</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-1">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
-                className="no-focus-border"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -73,7 +111,6 @@ const SignUp = () => {
             <Form.Group className="mb-1">
               <Form.Label>Email</Form.Label>
               <Form.Control
-                className="no-focus-border"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -85,7 +122,6 @@ const SignUp = () => {
             <Form.Group className="mb-1">
               <Form.Label>Password</Form.Label>
               <Form.Control
-                className="no-focus-border"
                 type="password"
                 name="password"
                 value={formData.password}
@@ -97,7 +133,6 @@ const SignUp = () => {
             <Form.Group className="mb-1">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
-                className="no-focus-border"
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
@@ -109,7 +144,6 @@ const SignUp = () => {
             <Form.Group className="mb-1">
               <Form.Label>Address</Form.Label>
               <Form.Control
-                className="no-focus-border"
                 type="text"
                 name="address"
                 value={formData.address}
@@ -121,7 +155,6 @@ const SignUp = () => {
             <Form.Group className="mb-1">
               <Form.Label>Contact Number</Form.Label>
               <Form.Control
-                className="no-focus-border"
                 type="tel"
                 name="contact"
                 value={formData.contact}
@@ -129,6 +162,7 @@ const SignUp = () => {
                 required
               />
             </Form.Group>
+
             <Form.Group className="mb-4">
               <Form.Label>Account Type</Form.Label>
               <div>
@@ -156,7 +190,7 @@ const SignUp = () => {
                 />
                 <Form.Check
                   inline
-                  label="Admin "
+                  label="Admin"
                   name="role"
                   type="radio"
                   id="admin-role"
@@ -167,16 +201,28 @@ const SignUp = () => {
                 />
               </div>
             </Form.Group>
+   <Button
+  variant="warning"
+  type="submit"
+  className="w-100 mt-3"
+  disabled={loading}
+>
+  {loading ? "Creating account..." : "Sign Up"}
+</Button>
 
-            <Button variant="btn btn-warning" type="submit" className="w-100 mt-3">
-              Sign Up
-            </Button>
+
           </Form>
           <div className="text-center mt-2">
-            Already have an account? <b><Link className="text-warning" to="/login">Log In here!</Link></b>
+            Already have an account?{" "}
+            <b>
+              <Link className="text-warning text-decoration-none" to="/login">
+                Log In here!
+              </Link>
+            </b>
           </div>
         </Card.Body>
       </Card>
+      <ToastContainer />
     </div>
   );
 };

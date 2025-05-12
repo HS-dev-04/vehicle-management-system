@@ -89,3 +89,9 @@ button:hover {
   background-color:#ff5722;
 }
 
+.custom_Form{
+  width: 32% !important;
+}
+.custom_Form:focus {
+  border-color: black !important;
+}
