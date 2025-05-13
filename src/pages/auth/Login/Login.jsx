@@ -5,49 +5,56 @@ import {
   updateLoginData,
   resetLoginData,
 } from "../../../redux/slices/authLogin";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { login } from "../../../redux/slices/authSignup";
+import { app } from "../../../../Firebase";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const auth = getAuth(app);
+
   const { email, password } = useSelector((state) => state.login);
   const { user } = useSelector((state) => state.signup);
-
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     dispatch(updateLoginData({ [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const adminEmail = "admin@gmail.com";
+    const adminPassword = "admin123";
 
-    
-    if (!user || !user.email || !user.password) {
-      setError("User not found. Please create account.");
-      dispatch(resetLoginData())
+    if (email === adminEmail && password === adminPassword) {
+      navigate("/admin");
       return;
     }
-    if (user.email === email && user.password === password) {
-      dispatch(login());
 
-    
-      switch (user.role) {
-        case "admin":
-          navigate("/admin-dashboard");
-          break;
-        case "seller":
-          navigate("/seller-dashboard");
-          break;
-        case "buyer":
-          navigate("/buyer-dashboard");
-          break;
-        default:
-          navigate("/");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+
+      // If user is in Redux (from signup), continue
+      if (user?.email === email && user?.password === password) {
+        dispatch(login());
+
+        switch (user.role) {
+          case "renter":
+            navigate("/renter-dashboard");
+            break;
+          case "buyer":
+            navigate("/buyer-dashboard");
+            break;
+          default:
+            navigate("/");
+        }
+      } else {
+        setError("User data missing. Please sign up again.");
+        dispatch(resetLoginData());
       }
-    } else {
-      setError("Invalid email or password");
-      dispatch(resetLoginData());
+    } catch (err) {
+      setError("Login failed: " + err.message);
     }
   };
 

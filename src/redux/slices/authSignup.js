@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { db } from "../../../public/Firebase";
+import { db } from "../../../Firebase";
 import { collection } from "firebase/firestore";
 import { addDoc } from "firebase/firestore"; 
 const initialState = {
@@ -39,7 +39,7 @@ export const signupAsync = (userData) => async (dispatch) => {
       ...userData,
       createdAt: new Date(),
     });
-    console.log("Document written with ID: ", docRef.id); // Success log
+    console.log("Document written with ID: ", docRef.id); 
     dispatch(signup(userData));
   } catch (error) {
     console.error("Full error details:", {

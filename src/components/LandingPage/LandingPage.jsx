@@ -47,7 +47,6 @@ const Landing = () => {
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Button color="inherit"  onClick={() => navigate('/signup')}>Buyer</Button>
             <Button color="inherit" onClick={() => navigate('/signup')}>Seller</Button>
-            <Button color="inherit" onClick={() => navigate('/signup')}>Admin</Button>
             <Button 
               variant="contained" 
               color="primary"

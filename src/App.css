@@ -95,3 +95,9 @@ button:hover {
 .custom_Form:focus {
   border-color: black !important;
 }
+
+/*--------------Car Styling---------------------*/
+.card:hover {
+  background-color: #f9f9f9;
+  transition: 0.3s;
+}

@@ -6,7 +6,7 @@ import { Form, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../../../public/Firebase";
+import { db } from "../../../../Firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -49,21 +49,25 @@ const SignUp = () => {
 
     try {
       const auth = getAuth();
+      console.log('Authentication',auth)
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-      await setDoc(doc(db, "users", formData.email), {
-        name: formData.name,
-        email: formData.email,
-        address: formData.address,
-        contact: formData.contact,
-        role: formData.role,
-        uid: userCredential.user.uid,
-        createdAt: new Date(),
-      });
+   const uid = userCredential.user.uid;
+
+await setDoc(doc(db, "users", uid), {
+  name: formData.name,
+  email: formData.email,
+  address: formData.address,
+  contact: formData.contact,
+  role: formData.role,
+  uid: uid,
+  createdAt: new Date(),
+});
+
 
       dispatch(
         signup({
@@ -179,23 +183,12 @@ setTimeout(() => {
                 />
                 <Form.Check
                   inline
-                  label="Seller"
+                  label="Renter"
                   name="role"
                   type="radio"
-                  id="seller-role"
-                  value="seller"
-                  checked={formData.role === "seller"}
-                  onChange={handleChange}
-                  required
-                />
-                <Form.Check
-                  inline
-                  label="Admin"
-                  name="role"
-                  type="radio"
-                  id="admin-role"
-                  value="admin"
-                  checked={formData.role === "admin"}
+                  id="renter-role"
+                  value="renter"
+                  checked={formData.role === "renter"}
                   onChange={handleChange}
                   required
                 />
