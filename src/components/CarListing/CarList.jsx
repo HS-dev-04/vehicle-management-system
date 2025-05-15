@@ -9,7 +9,7 @@ import car4 from "../../assets/car4.jpg";
 import car5 from "../../assets/car5.jpg";
 import car6 from "../../assets/car6.jpg";
 
-const CarList = ({filterStatus}) => {
+const CarList = () => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
   const [roleFilter, setRoleFilter] = useState("");
@@ -157,7 +157,7 @@ const CarList = ({filterStatus}) => {
               >
                 <div className="card h-100 shadow-sm">
                   <img
-                    src={images[index % images.length]}
+                    src={images[car.imageIndex ?? (index % images.length)]}
                     className="card-img-top"
                     alt={car.name}
                     style={{ height: "200px", objectFit: "cover" }}

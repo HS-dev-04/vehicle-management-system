@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { db } from '../../../../Firebase';
+import { useEffect, useState } from "react";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "../../../../Firebase";
 
 const AdminApprovals = () => {
   const [requests, setRequests] = useState([]);
@@ -8,18 +15,39 @@ const AdminApprovals = () => {
   const fetchRequests = async () => {
     const querySnapshot = await getDocs(collection(db, "renterRequests"));
     const data = querySnapshot.docs
-      .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(req => req.status === "pending");
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((req) => req.status === "pending");
     setRequests(data);
   };
 
   const approveRequest = async (id) => {
     try {
       const ref = doc(db, "renterRequests", id);
-      await updateDoc(ref, {
-        status: "approved"
+      const snapshot = await getDoc(ref);
+      const requestData = snapshot.data();
+
+      if (!requestData) {
+        alert("Request not found");
+        return;
+      }
+      
+      await addDoc(collection(db, "cars"), {
+        name: requestData.name,
+        type: requestData.type,
+        model: requestData.model,
+        priceHour: requestData.priceHour,
+        priceDay: requestData.priceDay,
+        role: requestData.role,
+        postedBy: requestData.createdBy,
+        imageIndex: Math.floor(Math.random() * 6),
+        createdAt: new Date(),
       });
-      alert("Request approved!");
+
+      await updateDoc(ref, {
+        status: "approved",
+      });
+
+      alert("Request approved and car posted!");
       fetchRequests();
     } catch (error) {
       console.error("Error approving request: ", error);
@@ -45,9 +73,14 @@ const AdminApprovals = () => {
                 <p>Model: {req.model}</p>
                 <p>Price/hr: Rs {req.priceHour}</p>
                 <p>Price/day: Rs {req.priceDay}</p>
-                <p><strong>Status:</strong> {req.status}</p>
-                <button className="btn btn-success" onClick={() => approveRequest(req.id)}>
-                   Approve
+                <p>
+                  <strong>Status:</strong> {req.status}
+                </p>
+                <button
+                  className="btn btn-success"
+                  onClick={() => approveRequest(req.id)}
+                >
+                  Approve
                 </button>
               </div>
             </div>

@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../../../Firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore'; 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { useState, useEffect } from "react";
+import { db } from "../../../Firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const BuyerNotification = () => {
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const q = query(
-          collection(db, 'notifications'),
-          where('toRoles', 'array-contains', 'buyer'), 
-          where('read', '==', false)
+          collection(db, "notifications"),
+          where("toRoles", "array-contains", "buyer"),
+          where("read", "==", false)
         );
 
         const querySnapshot = await getDocs(q);
@@ -20,11 +19,10 @@ const BuyerNotification = () => {
           id: doc.id,
           ...doc.data(),
         }));
-
         setNotifications(notificationsList);
       } catch (error) {
-        console.error('Error fetching notifications:', error);
-        toast.error('Failed to load notifications');
+        console.error("Error fetching notifications:", error);
+        toast.error("Failed to load notifications");
       }
     };
 
@@ -44,7 +42,11 @@ const BuyerNotification = () => {
               className="notification-item mb-3 p-3 border border-primary rounded"
             >
               <h5>{notification.message}</h5>
-              <small>{new Date(notification.createdAt.seconds * 1000).toLocaleString()}</small>
+              <small>
+                {new Date(
+                  notification.createdAt.seconds * 1000
+                ).toLocaleString()}
+              </small>
             </div>
           ))}
         </div>

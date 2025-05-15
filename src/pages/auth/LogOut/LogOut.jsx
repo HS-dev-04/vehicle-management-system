@@ -1,25 +1,31 @@
-// Logout.jsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/slices/authSignup";
 import { app } from "../../../../Firebase";
 
 const Logout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const auth = getAuth(app);
     signOut(auth)
       .then(() => {
-        console.log(" User signed out");
+        dispatch(logout());   
+        setLoading(false);
         navigate("/login");
       })
       .catch((error) => {
-        console.error("Logout error:", error);
+        setLoading(false);
       });
-  }, [navigate]);
+  }, [dispatch, navigate]);
 
-  return <p>Logging out...</p>;
+  if (loading) {
+    return <p>Logging out, please wait...</p>;
+  }
 };
 
 export default Logout;
