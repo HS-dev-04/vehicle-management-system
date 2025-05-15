@@ -9,16 +9,14 @@ import car4 from "../../assets/car4.jpg";
 import car5 from "../../assets/car5.jpg";
 import car6 from "../../assets/car6.jpg";
 
-const CarList = () => {
+const CarList = ({filterStatus}) => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
+  const [roleFilter, setRoleFilter] = useState("");
+
   const [filters, setFilters] = useState({
     name: "",
     model: "",
-    oneHourMin: "",
-    oneHourMax: "",
-    dayMin: "",
-    dayMax: "",
   });
 
   const images = [car1, car2, car3, car4, car5, car6];
@@ -51,121 +49,133 @@ const CarList = () => {
 
   useEffect(() => {
     const applyFilters = () => {
-      const { name, model, oneHourMin, oneHourMax, dayMin, dayMax } = filters;
+      const { name, model } = filters;
 
       const filtered = cars.filter((car) => {
         const matchesName =
           name === "" || car.name.toLowerCase().includes(name.toLowerCase());
         const matchesModel =
           model === "" || car.model.toLowerCase().includes(model.toLowerCase());
-        const matchesOneHour =
-          (!oneHourMin || car.oneHourPrice >= Number(oneHourMin)) &&
-          (!oneHourMax || car.oneHourPrice <= Number(oneHourMax));
-        const matchesDay =
-          (!dayMin || car.twentyFourHourPrice >= Number(dayMin)) &&
-          (!dayMax || car.twentyFourHourPrice <= Number(dayMax));
+        const matchesRole = roleFilter === "" || car.role === roleFilter;
 
-        return matchesName && matchesModel && matchesOneHour && matchesDay;
+        return matchesName && matchesModel && matchesRole;
       });
 
       setFilteredCars(filtered);
     };
 
     applyFilters();
-  }, [filters, cars]);
+  }, [filters, cars, roleFilter]);
 
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Available Cars</h2>
 
-      <div className="card mb-4 p-3 shadow-sm">
-        <div className="row g-3">
+      <div className="card mb-4 p-4 shadow-sm">
+        <div className="row g-3 align-items-end">
           <div className="col-md-3">
-            <input 
+            <label className="form-label">Search by Name</label>
+            <input
               type="text"
               name="name"
-              placeholder="Search by Name"
+              className="form-control"
+              placeholder="e.g. Toyota"
               value={filters.name}
               onChange={handleFilterChange}
-              className="form-control"
             />
           </div>
           <div className="col-md-3">
+            <label className="form-label">Search by Model</label>
             <input
               type="text"
               name="model"
-              placeholder="Search by Model"
+              className="form-control"
+              placeholder="e.g. 2020"
               value={filters.model}
               onChange={handleFilterChange}
-              className="form-control"
             />
           </div>
-          <div className="col-md-3">
-            <input
-              type="number"
-              name="oneHourMin"
-              placeholder="Min 1-Hour Price"
-              value={filters.oneHourMin}
-              onChange={handleFilterChange}
-              className="form-control"
-            />
-          </div>
-          <div className="col-md-3">
-            <input
-              type="number"
-              name="oneHourMax"
-              placeholder="Max 1-Hour Price"
-              value={filters.oneHourMax}
-              onChange={handleFilterChange}
-              className="form-control"
-            />
-          </div>
-          <div className="col-md-3">
-            <input
-              type="number"
-              name="dayMin"
-              placeholder="Min 24-Hour Price"
-              value={filters.dayMin}
-              onChange={handleFilterChange}
-              className="form-control"
-            />
-          </div>
-          <div className="col-md-3">
-            <input
-              type="number"
-              name="dayMax"
-              placeholder="Max 24-Hour Price"
-              value={filters.dayMax}
-              onChange={handleFilterChange}
-              className="form-control"
-            />
+          <div className="col-md-6">
+            <label className="form-label">Filter by Role</label>
+            <div className="d-flex gap-4">
+              <div className="form-check">
+                <input
+                  type="radio"
+                  id="all"
+                  name="roleFilter"
+                  className="form-check-input"
+                  value=""
+                  checked={roleFilter === ""}
+                  onChange={() => setRoleFilter("")}
+                />
+                <label className="form-check-label" htmlFor="all">
+                  All
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  id="buyer"
+                  name="roleFilter"
+                  className="form-check-input"
+                  value="buyer"
+                  checked={roleFilter === "buyer"}
+                  onChange={(e) => setRoleFilter(e.target.value)}
+                />
+                <label className="form-check-label" htmlFor="buyer">
+                  Buyer
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  id="renter"
+                  name="roleFilter"
+                  className="form-check-input"
+                  value="renter"
+                  checked={roleFilter === "renter"}
+                  onChange={(e) => setRoleFilter(e.target.value)}
+                />
+                <label className="form-check-label text-black" htmlFor="renter">
+                  Renter
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Car Cards */}
       <div className="row row-cols-1 row-cols-md-3 g-4">
-        {filteredCars.slice(0, 6).map((car, index) => (
-          <div className="col" key={car.id}>
-            <Link
-              to={`/car/${car.id}`}
-              className="text-decoration-none text-dark"
-            >
-              <div className="card h-100 shadow-sm">
-                <img
-                  src={images[index % images.length]}
-                  className="card-img-top"
-                  alt={car.name}
-                  style={{ height: "200px", objectFit: "cover" }}
-                />
-                <div className="card-body text-center">
-                  <h5 className="card-title">{car.name}</h5>
-                  <p className="card-text text-muted">{car.type}</p>
+        {filteredCars.length === 0 ? (
+          <div className="col-12 text-center text-muted">No cars found</div>
+        ) : (
+          filteredCars.slice(0, 6).map((car, index) => (
+            <div className="col" key={car.id}>
+              <Link
+                to={`/car/${car.id}`}
+                className="text-decoration-none text-dark"
+              >
+                <div className="card h-100 shadow-sm">
+                  <img
+                    src={images[index % images.length]}
+                    className="card-img-top"
+                    alt={car.name}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                  <div className="card-body text-center">
+                    <h5 className="card-title">{car.name}</h5>
+                    <p className="card-text text-muted">
+                      {car.type} - {car.model}
+                    </p>
+                    <p className="text-black mb-0">
+                      {car.role?.toUpperCase()}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        ))}
+              </Link>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

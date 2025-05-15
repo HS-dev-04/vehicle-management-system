@@ -1,13 +1,10 @@
-import React from 'react';
-// import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Typography, Box} from '@mui/material';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
-// import { Link } from 'react-router-dom';
 const Landing = () => {
   const navigate = useNavigate();  
-  const HeroSection = styled(Box)(({ theme }) => ({
+  const HeroSection = styled(Box)(() => ({
     height: '100vh',
     backgroundImage: 'url(https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80)',
     backgroundSize: 'cover',
@@ -38,7 +35,6 @@ const Landing = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-        
       <AppBar position="static" sx={{ backgroundColor: 'black' }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>

@@ -1,5 +1,5 @@
 import { db } from '../../../Firebase';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 export const addCarToFirestore = async (carData) => {
   try {
@@ -10,12 +10,16 @@ export const addCarToFirestore = async (carData) => {
       uuid: uuid,
       oneHourPrice: Number(carData.oneHourPrice),
       twentyFourHourPrice: Number(carData.twentyFourHourPrice),
-      createdAt: new Date()
+      createdAt: serverTimestamp()
     });
-
+    await addDoc(collection(db,'notifications'),{
+      message:`New car posted for ${carData.role}:${carData.name}`,
+      userType: carData.role,
+      createdAt:serverTimestamp()
+    });
     return { success: true, id: uuid };
   } catch (error) {
-    console.error('Error adding car to Firestore:', error);
+     console.error('Error adding car or notification to Firestore:', error);
     return { success: false, error };
   }
 };

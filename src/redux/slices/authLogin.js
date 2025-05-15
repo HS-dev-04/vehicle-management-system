@@ -17,12 +17,8 @@ const authLoginSlice = createSlice({
           ? action.payload.password
           : state.password;
     },
-    resetLoginData: (state) => {
-      state.email = "";
-      state.password = "";
-    },
   },
 });
 
-export const { updateLoginData, resetLoginData } = authLoginSlice.actions;
+export const { updateLoginData } = authLoginSlice.actions;
 export default authLoginSlice.reducer;

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../../redux/slices/authSignup";
 import { Form, Button, Card } from "react-bootstrap";
@@ -14,7 +14,6 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,12 +23,14 @@ const SignUp = () => {
     contact: "",
     role: "",
   });
-
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
+
       [e.target.name]: e.target.value,
     });
+    console.log("Form Data is", formData);
   };
 
   const handleSubmit = async (e) => {
@@ -43,31 +44,31 @@ const SignUp = () => {
 
     if (formData.password.length < 6) {
       toast.error("Password must be at least 6 characters");
-        setLoading(false);
+      setLoading(false);
       return;
     }
 
     try {
       const auth = getAuth();
-      console.log('Authentication',auth)
+      console.log("Authentication", auth);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-   const uid = userCredential.user.uid;
-
-await setDoc(doc(db, "users", uid), {
-  name: formData.name,
-  email: formData.email,
-  address: formData.address,
-  contact: formData.contact,
-  role: formData.role,
-  uid: uid,
-  createdAt: new Date(),
-});
-
+      const uid = userCredential.user.uid;
+      console.log("UUID",uid);
+      await setDoc(doc(db, "users", uid), {
+        name: formData.name,
+        email: formData.email,
+        address: formData.address,
+        contact: formData.contact,
+        role: formData.role,
+        uid: uid,
+        password: formData.password,
+        createdAt: new Date(),
+      });
 
       dispatch(
         signup({
@@ -80,9 +81,9 @@ await setDoc(doc(db, "users", uid), {
         })
       );
       toast.success("Account created successfully!");
-setTimeout(() => {
-  navigate("/login");
-}, 4000);
+      setTimeout(() => {
+        navigate("/login");
+      }, 4000);
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         toast.error("This email already exists");
@@ -90,8 +91,8 @@ setTimeout(() => {
         toast.error("Signup error: " + error.message);
       }
       console.error("Signup error:", error.message);
-    }finally{
-          setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -194,16 +195,14 @@ setTimeout(() => {
                 />
               </div>
             </Form.Group>
-   <Button
-  variant="warning"
-  type="submit"
-  className="w-100 mt-3"
-  disabled={loading}
->
-  {loading ? "Creating account..." : "Sign Up"}
-</Button>
-
-
+            <Button
+              variant="warning"
+              type="submit"
+              className="w-100 mt-3"
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Sign Up"}
+            </Button>
           </Form>
           <div className="text-center mt-2">
             Already have an account?{" "}

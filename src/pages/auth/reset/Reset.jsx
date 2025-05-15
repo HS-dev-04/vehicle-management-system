@@ -47,7 +47,7 @@ const Reset = () => {
           console.log("OTP sent:", response);
           setLoading(false);
           alert("OTP sent to your email.");
-          navigate("/otp"); // ⬅️ Navigate after success
+          navigate("/otp"); 
         },
         (error) => {
           console.error("Error sending OTP:", error);

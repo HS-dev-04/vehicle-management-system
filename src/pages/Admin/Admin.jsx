@@ -61,22 +61,36 @@
 // export default ImageUploader;
 // src/pages/Admin.js (or wherever your Admin component is)
 // src/pages/Admin.js (or wherever your Admin component is)
-import React from 'react';
-import { Link } from 'react-router-dom';
-import CarList from '../../components/CarListing/CarList';
+import React from "react";
+import { Link } from "react-router-dom";
+import CarList from "../../components/CarListing/CarList";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
 const Admin = () => {
   return (
-    <div className="d-flex" style={{ minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <div className="bg-dark text-white p-3" style={{ width: '250px' }}>
+    <div className="d-flex" style={{ minHeight: "100vh" }}>
+      
+      <div className="bg-dark text-white p-3" style={{ width: "250px" }}>
         <h4 className="mb-4 text-center">Admin Panel</h4>
         <ul className="nav flex-column">
           <li className="nav-item mb-2">
             <Link to="/AddCarPost" className="nav-link text-white">
               🚗 Add Car Post
             </Link>
+            <Link
+              to="/Notifications"
+              className="nav-link text-white d-flex align-items-center gap-2"
+            >
+              <i className="fa-solid fa-bell"></i>
+              <span>Notifications</span>
+            </Link>
+            <Link to="/AdminApprovals"
+             className="nav-link text-white d-flex align-items-center gap-2">
+                
+              <span>Admin Approvals</span>
+            </Link>
           </li>
-          {/* You can add more sidebar items below */}
+         
           {/* <li className="nav-item mb-2">
             <Link to="/manageCars" className="nav-link text-white">
               🛠 Manage Cars
@@ -85,11 +99,11 @@ const Admin = () => {
         </ul>
       </div>
 
-      {/* Main Content Area */}
+     
       <div className="flex-grow-1 p-4">
         <h2>Dashboard</h2>
         <p>Welcome to the admin dashboard. Use the sidebar to navigate.</p>
-        <CarList/>
+        <CarList />
       </div>
     </div>
   );
