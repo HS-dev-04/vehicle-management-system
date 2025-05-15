@@ -1,48 +1,51 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getDoc } from "firebase/firestore";
-import { doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { app, db } from "../../../../Firebase";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateLoginData } from "../../../redux/slices/authLogin";
-const Login = () => {
+
+const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const auth = getAuth(app);
-  const isAuthenticated = useSelector((state) => state.signup.isAuthenticated);
-  const loginData = useSelector((state)=>state.login);
   const dispatch = useDispatch();
-  console.log("Authentication", isAuthenticated);
+  const isAuthenticated = useSelector((state) => state.signup.isAuthenticated);
   const nameofUser = useSelector((state) => state.signup.user.name);
-  console.log("Name of user", nameofUser);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const adminEmail = "admin@gmail.com";
   const adminPassword = "admin123";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (email === adminEmail && password === adminPassword) {
+      localStorage.setItem("authToken", "admin-static-token");
+      setIsAuthenticated(true);
       navigate("/admin");
       return;
     }
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-
       const uid = userCredential.user.uid;
 
       const docRef = doc(db, "users", uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-
         const userData = docSnap.data();
+        localStorage.setItem("authToken", userCredential.user.accessToken);
+        setIsAuthenticated(true);
+        dispatch(updateLoginData({ role: userData.role, email }));
 
         if (userData.role === "buyer") {
           navigate("/buyer-dashboard");
@@ -67,23 +70,31 @@ const Login = () => {
       console.error("Login failed:", error.message);
     }
   };
+
   const HandleEmail = (e) => {
     setEmail(e.target.value);
-    dispatch(updateLoginData({[e.target.name]:e.target.value}))
-  }
+    dispatch(updateLoginData({ [e.target.name]: e.target.value }));
+  };
+
   const HandlePassword = (e) => {
-     setPassword(e.target.value)
-      dispatch(updateLoginData({[e.target.name]:e.target.value}))
-  }
+    setPassword(e.target.value);
+    dispatch(updateLoginData({ [e.target.name]: e.target.value }));
+  };
+
   return (
     <div className="login-container">
-      {isAuthenticated ? <p className="text-center">Welcome back, {nameofUser}</p> : <h2 className="text-center">Login </h2>}
+      {isAuthenticated ? (
+        <p className="text-center">Welcome back, {nameofUser}</p>
+      ) : (
+        <h2 className="text-center">Login</h2>
+      )}
       {error && <p className="text-danger">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Email:</label>
           <input
             type="email"
+            name="email"
             required
             value={email}
             onChange={HandleEmail}
@@ -95,6 +106,7 @@ const Login = () => {
           <label>Password:</label>
           <input
             type="password"
+            name="password"
             required
             value={password}
             onChange={HandlePassword}
@@ -102,11 +114,7 @@ const Login = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-warning text-white mt-3"
-          onClick={handleSubmit}
-        >
+        <button type="submit" className="btn btn-warning text-white mt-3">
           Login
         </button>
 

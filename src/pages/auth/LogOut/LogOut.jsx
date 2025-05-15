@@ -14,8 +14,11 @@ const Logout = () => {
     const auth = getAuth(app);
     signOut(auth)
       .then(() => {
-        dispatch(logout());   
+        dispatch(logout());
         setLoading(false);
+        localStorage.removeItem("authToken");
+        navigate("/login");
+
         navigate("/login");
       })
       .catch((error) => {
