@@ -10,8 +10,12 @@ const RenterForm = () => {
     name: "",
     type: "",
     model: "",
-    priceHour: "",
-    priceDay: "",
+    mile: "",
+    fuelType: "",
+    transmission: "",
+    doors: "",
+    oneHourPrice: "",
+    twentyFourHourPrice: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -107,15 +111,63 @@ const RenterForm = () => {
               required
             />
           </div>
+             <div className="mb-3">
+            <label className="form-label">Mile</label>
+            <input
+              type="text"
+              className="form-control"
+              name="mile"
+              placeholder="Enter mile"
+              value={formData.mile}
+              onChange={handleChange}
+              required
+            />
+          </div>
+               <div className="mb-3">
+            <label className="form-label">Fuel Type</label>
+            <input
+              type="text"
+              className="form-control"
+              name="fuelType"
+              placeholder="e.g Gasoline"
+              value={formData.fuelType}
+              onChange={handleChange}
+              required
+            />
+          </div>
+               <div className="mb-3">
+            <label className="form-label">Transmission</label>
+            <input
+              type="text"
+              className="form-control"
+              name="transmission"
+              placeholder="e.g Automatic"
+              value={formData.transmission}
+              onChange={handleChange}
+              required
+            />
+          </div>
+               <div className="mb-3">
+            <label className="form-label">Doors</label>
+            <input
+              type="text"
+              className="form-control"
+              name="doors"
+              placeholder="Enter doors"
+              value={formData.doors}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
           <div className="mb-3">
             <label className="form-label">Price per Hour</label>
             <input
               type="number"
               className="form-control"
-              name="priceHour"
+              name="oneHourPrice"
               placeholder="Enter 1-hour price"
-              value={formData.priceHour}
+              value={formData.oneHourPrice}
               onChange={handleChange}
               required
             />
@@ -126,9 +178,9 @@ const RenterForm = () => {
             <input
               type="number"
               className="form-control"
-              name="priceDay"
+              name="twentyFourHourPrice"
               placeholder="Enter 24-hour price"
-              value={formData.priceDay}
+              value={formData.twentyFourHourPrice}
               onChange={handleChange}
               required
             />

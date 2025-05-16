@@ -2,7 +2,6 @@
   box-shadow: none !important;
   border-color: black; 
   background-color: none !important;
-  
 }
 .login-container {
   max-width: 400px;
@@ -42,7 +41,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+customButton:hover {
   background-color:#ff5722;
 }
 

@@ -1,4 +1,3 @@
-// App.jsx
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import Login from "./pages/auth/Login/Login";
 import Reset from "./pages/auth/reset/reset";
 import Otp from "./pages/auth/otp/Otp";
 import AdminDashboard from "./pages/Admin/Admin";
+import AdminNotifications from './pages/Admin/AdminNotifications/AdminNotifications'
 import CarList from "./components/CarListing/CarList";
 import AddCarForm from "./components/AddCarForm/AddCarForm";
 import BuyerDashboard from "./pages/Buyer/Buyer";
@@ -24,6 +24,7 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem("authToken") !== null;
   });
+  console.log("Authentication in app is ",isAuthenticated)
 
   return (
     <Routes>
@@ -71,7 +72,7 @@ const App = () => {
           </Protected>
         }
       />
-
+      <Route path="/AdminNotifications" element={<AdminNotifications/>}/>
       <Route path="/CarList" element={<CarList />} />
       <Route path="/car/:id" element={<CarDetails />} />
       <Route path="/buyerNotification" element={<BuyerNotification />} />
