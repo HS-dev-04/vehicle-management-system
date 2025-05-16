@@ -19,7 +19,7 @@ const Sidebar = ({ role }) => {
         <li className="nav-item mb-2">
           {role === "admin" ? (
             <Link
-              to="/Notifications"
+              to="/AdminNotifications"
               className="nav-link text-white d-flex align-items-center gap-2"
             >
               <i className="fa-solid fa-bell"></i>

@@ -5,7 +5,8 @@ import { getDoc, doc } from "firebase/firestore";
 import { app, db } from "../../../../Firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLoginData } from "../../../redux/slices/authLogin";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const auth = getAuth(app);
@@ -16,16 +17,26 @@ const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const adminEmail = "admin@gmail.com";
   const adminPassword = "admin123";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    const toastId = toast.loading("Logging in...");
 
     if (email === adminEmail && password === adminPassword) {
       localStorage.setItem("authToken", "admin-static-token");
       setIsAuthenticated(true);
+      toast.update(toastId, {
+        render: "Admin login successful",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
       navigate("/admin");
       return;
     }
@@ -47,6 +58,13 @@ const Login = ({ setIsAuthenticated }) => {
         setIsAuthenticated(true);
         dispatch(updateLoginData({ role: userData.role, email }));
 
+        toast.update(toastId, {
+          render: "Login successful",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+
         if (userData.role === "buyer") {
           navigate("/buyer-dashboard");
         } else if (userData.role === "renter") {
@@ -55,19 +73,33 @@ const Login = ({ setIsAuthenticated }) => {
           navigate("/");
         }
       } else {
-        setError("User profile not found in Firestore.");
-        console.error("No user data in Firestore for UID:", uid);
+        toast.update(toastId, {
+          render: "User profile not found in Firestore.",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
     } catch (error) {
-      if (
-        error.code === "auth/user-not-found" ||
-        error.code === "auth/wrong-password"
-      ) {
-        setError("Invalid email or password.");
-      } else {
-        setError("Login error: " + error.message);
-      }
       console.error("Login failed:", error.message);
+
+      let message = "Incorrect email or password.";
+      if (error.code === "auth/user-not-found") {
+        message = "Incorrect email address.";
+      } else if (error.code === "auth/wrong-password") {
+        message = "Incorrect password.";
+      } else {
+        message = "Login error: " + "Incorrect email or password.";
+      }
+
+      toast.update(toastId, {
+        render: message,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,6 +115,7 @@ const Login = ({ setIsAuthenticated }) => {
 
   return (
     <div className="login-container">
+      <ToastContainer position="top-center" autoClose={3000} />
       {isAuthenticated ? (
         <p className="text-center">Welcome back, {nameofUser}</p>
       ) : (
@@ -114,8 +147,12 @@ const Login = ({ setIsAuthenticated }) => {
           />
         </div>
 
-        <button type="submit" className="btn btn-warning text-white mt-3">
-          Login
+        <button
+          type="submit"
+          className="btn btn-warning text-white mt-3"
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         <p className="mt-2">
