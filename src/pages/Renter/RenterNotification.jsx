@@ -16,7 +16,6 @@ const RenterNotification = () => {
           where("toRoles", "array-contains", "seller"),
           where("read", "==", false)
         );
-        console.log(q);
         const querySnapshot = await getDocs(q);
         const notificationsList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
