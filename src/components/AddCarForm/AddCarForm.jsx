@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { addCarToFirestore } from "../CarListing/PostCarForm"; // Assuming this function posts the car
+import { useState } from "react";
+import { addCarToFirestore } from "../CarListing/PostCarForm";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { saveNotification } from "../../Utils/SaveNotifications";
+import CarForm from "../../pages/Form/CarFom";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddCarForm = () => {
@@ -19,7 +20,7 @@ const AddCarForm = () => {
     twentyFourHourPrice: "",
     role: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setCarData({
       ...carData,
@@ -72,161 +73,13 @@ const AddCarForm = () => {
       <div className="card p-4 shadow w-100" style={{ maxWidth: "500px" }}>
         <ToastContainer position="top-right" autoClose={3000} />
         <h2 className="text-center mb-4">Post New Car</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Car Name</label>
-            <input
-              type="text"
-              name="name"
-              className="form-control"
-              placeholder="Enter car name"
-              value={carData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Type</label>
-            <input
-              type="text"
-              name="type"
-              className="form-control"
-              placeholder="Enter car type"
-              value={carData.type}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Model</label>
-            <input
-              type="text"
-              name="model"
-              className="form-control"
-              placeholder="Enter model"
-              value={carData.model}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Mile</label>
-            <input
-              type="text"
-              name="mile"
-              className="form-control"
-              placeholder="Enter mile"
-              value={carData.mile}
-              onChange={handleChange}
-              required
-            />
-          </div>
-                      <div className="mb-3">
-            <label className="form-label">Fuel Type</label>
-            <input
-              type="text"
-              className="form-control"
-              name="fuelType"
-              placeholder="e.g Gasoline"
-              vale={carData.fuelType}
-              onChange={handleChange}
-              required
-            />
-          </div>
-               <div className="mb-3">
-            <label className="form-label">Transmission</label>
-            <input
-              type="text"
-              className="form-control"
-              name="transmission"
-              placeholder="e.g Automatic"
-              value={carData.transmission}
-              onChange={handleChange}
-              required
-            />
-          </div>
-               <div className="mb-3">
-            <label className="form-label">Doors</label>
-            <input
-              type="text"
-              className="form-control"
-              name="doors"
-              placeholder="Enter doors"
-              value={carData.doors}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Price per Hour</label>
-            <input
-              type="number"
-              name="oneHourPrice"
-              className="form-control"
-              placeholder="Enter 1-hour price"
-              value={carData.oneHourPrice}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Price per 24 Hours</label>
-            <input
-              type="number"
-              name="twentyFourHourPrice"
-              className="form-control"
-              placeholder="Enter 24-hour price"
-              value={carData.twentyFourHourPrice}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="form-label">Type Of car</label>
-            <div>
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="role"
-                  id="buyer-role"
-                  value="buyer"
-                  checked={carData.role === "buyer"}
-                  onChange={handleChange}
-                  required
-                />
-                <label className="form-check-label" htmlFor="buyer-role">
-                  Buyer
-                </label>
-              </div>
-
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="role"
-                  id="renter-role"
-                  value="renter"
-                  checked={carData.role === "renter"}
-                  onChange={handleChange}
-                  required
-                />
-                <label className="form-check-label" htmlFor="renter-role">
-                  Renter
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" className="btn btn-primary w-100">
-            Post Car
-          </button>
-        </form>
+        <CarForm
+          carData={carData}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          loading={loading}
+          showRoleSelector={true}
+        />
       </div>
     </div>
   );
