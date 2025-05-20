@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../../redux/slices/authSignup";
 import { Form, Button, Card } from "react-bootstrap";
@@ -9,6 +9,8 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../Firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import InputField from "../../../components/Fields/InputField";
+import RoleRadioGroup from "../../../components/Fields/RoleRadioGroup";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -23,19 +25,18 @@ const SignUp = () => {
     contact: "",
     role: "",
   });
-  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
-
       [e.target.name]: e.target.value,
     });
-    console.log("Form Data is", formData);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
       setLoading(false);
@@ -50,7 +51,6 @@ const SignUp = () => {
 
     try {
       const auth = getAuth();
-      console.log("Authentication", auth);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
@@ -58,32 +58,16 @@ const SignUp = () => {
       );
 
       const uid = userCredential.user.uid;
-      console.log("UUID",uid);
       await setDoc(doc(db, "users", uid), {
-        name: formData.name,
-        email: formData.email,
-        address: formData.address,
-        contact: formData.contact,
-        role: formData.role,
-        uid: uid,
-        password: formData.password,
+        ...formData,
+        uid,
         createdAt: new Date(),
       });
 
-      dispatch(
-        signup({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          address: formData.address,
-          contact: formData.contact,
-          role: formData.role,
-        })
-      );
+      dispatch(signup({ ...formData }));
+
       toast.success("Account created successfully!");
-      setTimeout(() => {
-        navigate("/login");
-      }, 4000);
+      setTimeout(() => navigate("/login"), 4000);
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         toast.error("This email already exists");
@@ -102,99 +86,49 @@ const SignUp = () => {
         <Card.Body>
           <h2 className="text-center mb-3">Sign Up</h2>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-1">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-1">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-1">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-1">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-1">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-1">
-              <Form.Label>Contact Number</Form.Label>
-              <Form.Control
-                type="tel"
-                name="contact"
-                value={formData.contact}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-4">
-              <Form.Label>Account Type</Form.Label>
-              <div>
-                <Form.Check
-                  inline
-                  label="Buyer"
-                  name="role"
-                  type="radio"
-                  id="buyer-role"
-                  value="buyer"
-                  checked={formData.role === "buyer"}
-                  onChange={handleChange}
-                  required
-                />
-                <Form.Check
-                  inline
-                  label="Renter"
-                  name="role"
-                  type="radio"
-                  id="renter-role"
-                  value="renter"
-                  checked={formData.role === "renter"}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </Form.Group>
+            <InputField 
+              label="Full Name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Address"
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+            <InputField
+              label="Contact Number"
+              type="tel"
+              name="contact"
+              value={formData.contact}
+              onChange={handleChange}
+            />
+            <RoleRadioGroup value={formData.role} onChange={handleChange} />
             <Button
               variant="warning"
               type="submit"

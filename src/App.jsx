@@ -19,12 +19,10 @@ import RenterForm from "./pages/Renter/RenterForm";
 import AdminApprovals from "./pages/Admin/AdminApprovals/AdminApprovals";
 import RenterNotify from "./pages/Renter/RenterNotification";
 import Protected from "./components/ProtectedRoute/ProtectedRoute";
-
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem("authToken") !== null;
   });
-  console.log("Authentication in app is ",isAuthenticated)
 
   return (
     <Routes>
