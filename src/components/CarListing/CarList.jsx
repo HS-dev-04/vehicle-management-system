@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../Firebase";
 import { Link } from "react-router-dom";
-import car1 from "../../assets/car1.avif";
-import car2 from "../../assets/car2.jpeg";
-import car3 from "../../assets/car3.webp";
-import car4 from "../../assets/car4.jpg";
-import car5 from "../../assets/car5.jpg";
-import car6 from "../../assets/car6.jpg";
+
+import car1 from "../../../dist/assets/car1-DJAA6xJ2-DJAA6xJ2.avif";
+import car2 from "../../../dist/assets/car2-9TEypQN7-9TEypQN7.jpeg";
+import car3 from "../../../dist/assets/car3-CdT7_i8_-CdT7_i8_.webp";
+import car4 from "../../../dist/assets/car4-D85rijZ0-D85rijZ0.jpg";
+import car5 from "../../../dist/assets/car5-R3x2BmsM-R3x2BmsM.jpg";
+import car6 from "../../../dist/assets/car6-CLr8pv4--CLr8pv4-.jpg"
 import { FaCar } from "react-icons/fa";
 import Filters from "../Filter/Filter";
 

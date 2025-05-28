@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import CarList from "../../components/CarListing/CarList";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Sidebar from "../../components/SideBar/SideBar";

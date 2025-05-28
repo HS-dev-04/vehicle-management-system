@@ -45,6 +45,7 @@ button {
 .custom_Form {
   width: 32% !important;
 }
+
 .custom_Form:focus {
   border-color: black !important;
 }
@@ -54,6 +55,7 @@ button {
   transition: 0.3s;
 }
 
+
 .customButtonStyling {
   color: white;
   position: relative;
@@ -62,6 +64,7 @@ button {
   font-weight: bold;
   border: none;
 }
+
 .customButtonStyling::after {
   content: "";
   position: absolute;
@@ -189,6 +192,7 @@ button {
   .hamburger {
     display: block;
     margin-right: 3%;
+    color: white;
   }
 
   .nav-links {
@@ -222,7 +226,6 @@ button {
   }
 }
 
-
 .custom-pagination-wrapper .pagination {
   gap: 0.5rem;
 }
@@ -252,3 +255,4 @@ button {
   border-color: #dee2e6;
   cursor: not-allowed;
 }
+
