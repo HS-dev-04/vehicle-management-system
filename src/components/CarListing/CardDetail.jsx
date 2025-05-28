@@ -24,7 +24,6 @@ import car5 from "../../assets/car5.jpg";
 import car6 from "../../assets/car6.jpg";
 
 const carImages = [car1, car2, car3, car4, car5, car6].filter(Boolean);
-console.log("CarImage", carImages);
 
 const CarDetails = () => {
   const { id } = useParams();

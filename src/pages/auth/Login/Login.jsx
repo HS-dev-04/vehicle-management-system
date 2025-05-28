@@ -6,6 +6,8 @@ import { app, db } from "../../../../Firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLoginData } from "../../../redux/slices/authLogin";
 import { ToastContainer, toast } from "react-toastify";
+import { Form } from "react-bootstrap";
+import InputField from "../../../components/Fields/InputField";
 import "react-toastify/dist/ReactToastify.css";
 const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
@@ -122,10 +124,10 @@ const Login = ({ setIsAuthenticated }) => {
         <h2 className="text-center">Login</h2>
       )}
       {error && <p className="text-danger">{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Email:</label>
-          <input
+          <InputField
+            label="Email: "
             type="email"
             name="email"
             required
@@ -134,10 +136,9 @@ const Login = ({ setIsAuthenticated }) => {
             className="form-control"
           />
         </div>
-
         <div className="form-group">
-          <label>Password:</label>
-          <input
+          <InputField
+            label="Password:"
             type="password"
             name="password"
             required
@@ -145,8 +146,7 @@ const Login = ({ setIsAuthenticated }) => {
             onChange={HandlePassword}
             className="form-control"
           />
-        </div>
-
+          </div>
         <button
           type="submit"
           className="btn btn-warning text-white mt-3"
@@ -161,7 +161,7 @@ const Login = ({ setIsAuthenticated }) => {
             Register
           </Link>
         </p>
-      </form>
+      </Form>
     </div>
   );
 };

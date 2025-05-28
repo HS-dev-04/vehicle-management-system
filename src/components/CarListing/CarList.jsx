@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../Firebase";
 import { Link } from "react-router-dom";
@@ -8,13 +8,16 @@ import car3 from "../../assets/car3.webp";
 import car4 from "../../assets/car4.jpg";
 import car5 from "../../assets/car5.jpg";
 import car6 from "../../assets/car6.jpg";
-import { FaCar, FaSearch, FaFilter, FaCalendarAlt } from "react-icons/fa";
+import { FaCar } from "react-icons/fa";
+import Filters from "../Filter/Filter";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
   const [roleFilter, setRoleFilter] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 3;
 
   const [filters, setFilters] = useState({
     name: "",
@@ -22,6 +25,12 @@ const CarList = () => {
   });
 
   const images = [car1, car2, car3, car4, car5, car6];
+
+  const indexOfLastCar = currentPage * carsPerPage;
+  const indexOfFirstCar = indexOfLastCar - carsPerPage;
+  const currentCars = filteredCars.slice(indexOfFirstCar, indexOfLastCar);
+  const totalPages = Math.ceil(filteredCars.length / carsPerPage);
+
   const getImageIndex = (car) => {
     try {
       if (car.imageIndex !== undefined && !isNaN(car.imageIndex)) {
@@ -30,7 +39,7 @@ const CarList = () => {
           return index;
         }
       }
-      //using hashing for static pic
+     
       if (car.id) {
         let hash = 0;
         for (let i = 0; i < car.id.length; i++) {
@@ -68,14 +77,6 @@ const CarList = () => {
     fetchCars();
   }, []);
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-
   useEffect(() => {
     const applyFilters = () => {
       const { name, model } = filters;
@@ -91,10 +92,13 @@ const CarList = () => {
       });
 
       setFilteredCars(filtered);
+      setCurrentPage(1); 
     };
 
     applyFilters();
   }, [filters, cars, roleFilter]);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="container py-5">
@@ -108,96 +112,12 @@ const CarList = () => {
         </p>
       </div>
 
-      <div className="card mb-5 border-0 shadow-lg">
-        <div className="card-header bg-success text-white py-3">
-          <h5 className="mb-0">
-            <FaFilter className="me-2" />
-            Filter Options
-          </h5>
-        </div>
-        <div className="card-body">
-          <div className="row g-3">
-            <div className="col-md-4">
-              <label className="form-label fw-bold">
-                <FaSearch className="me-2" />
-                Search by Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                className="form-control "
-                placeholder="e.g. Toyota"
-                value={filters.name}
-                onChange={handleFilterChange}
-              />
-            </div>
-            <div className="col-md-4">
-              <label className="form-label fw-bold">
-                <FaCalendarAlt className="me-2" />
-                Search by Model
-              </label>
-              <input
-                type="text"
-                name="model"
-                className="form-control"
-                placeholder="e.g. 2020"
-                value={filters.model}
-                onChange={handleFilterChange}
-              />
-            </div>
-            <div className="col-md-4">
-              <label className="form-label">Filter by Role</label>
-              <div className="d-flex gap-4">
-                <div className="form-check">
-                  <input
-                    type="radio"
-                    id="all"
-                    name="roleFilter"
-                    className="form-check-input"
-                    value=""
-                    checked={roleFilter === ""}
-                    onChange={() => setRoleFilter("")}
-                  />
-                  <label className="form-check-label" htmlFor="all">
-                    All
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    type="radio"
-                    id="buyer"
-                    name="roleFilter"
-                    className="form-check-input"
-                    value="buyer"
-                    checked={roleFilter === "buyer"}
-                    onChange={(e) => setRoleFilter(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="buyer">
-                    Buyer
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    type="radio"
-                    id="renter"
-                    name="roleFilter"
-                    className="form-check-input"
-                    value="renter"
-                    checked={roleFilter === "renter"}
-                    onChange={(e) => setRoleFilter(e.target.value)}
-                  />
-                  <label
-                    className="form-check-label text-black"
-                    htmlFor="renter"
-                  >
-                    Renter
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Filters
+        filters={filters}
+        roleFilter={roleFilter}
+        setFilters={setFilters}
+        setRoleFilter={setRoleFilter}
+      />
 
       <div className="mb-4 d-flex justify-content-between align-items-center">
         <h3 className="fw-bold">
@@ -205,7 +125,9 @@ const CarList = () => {
           {filteredCars.length === 1 ? "Vehicle" : "Vehicles"} Found
         </h3>
         <div className="text-muted">
-          Showing {Math.min(filteredCars.length, 6)} of {filteredCars.length}
+          Showing {indexOfFirstCar + 1}-
+          {Math.min(indexOfLastCar, filteredCars.length)} of{" "}
+          {filteredCars.length}
         </div>
       </div>
 
@@ -219,7 +141,9 @@ const CarList = () => {
       ) : filteredCars.length === 0 ? (
         <div className="card shadow-sm border-0">
           <div className="card-body text-center py-5">
-            <div className="display-1 text-muted mb-3">🚗</div>
+            <div className="display-1 text-muted mb-3">
+              <FaCar />
+            </div>
             <h3 className="text-muted">No vehicles match your criteria</h3>
             <p className="text-muted">
               Try adjusting your filters or search terms
@@ -236,58 +160,109 @@ const CarList = () => {
           </div>
         </div>
       ) : (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          {filteredCars.slice(0, 6).map((car) => (
-            <div className="col" key={car.id}>
-              <div className="card h-100 shadow-sm border-0 overflow-hidden">
-                <div className="position-relative">
-                  <img
-                    src={images[car.imageIndex]}
-                    className="card-img-top"
-                    alt={car.name}
-                    style={{ height: "220px", objectFit: "cover" }}
-                  />
-                  <div className="position-absolute top-0 end-0 m-2">
-                    <span
-                      className={`badge ${
-                        car.role === "buyer" ? "bg-success" : "bg-info"
-                      }`}
-                    >
-                      {car.role === "buyer" ? "FOR SALE" : "FOR RENT"}
-                    </span>
+        <>
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {currentCars.map((car) => (
+              <div className="col" key={car.id}>
+                <div className="card h-100 shadow-sm border-0 overflow-hidden">
+                  <div className="position-relative">
+                    <img
+                      src={images[car.imageIndex]}
+                      className="card-img-top"
+                      alt={car.name}
+                      style={{ height: "220px", objectFit: "cover" }}
+                    />
+                    <div className="position-absolute top-0 end-0 m-2">
+                      <span
+                        className={`badge ${
+                          car.role === "buyer" ? "bg-success" : "bg-info"
+                        }`}
+                      >
+                        {car.role === "buyer" ? "FOR SALE" : "FOR RENT"}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-start mb-2">
-                    <h5 className="card-title fw-bold mb-0">{car.name}</h5>
-                    <span className="text-primary fw-bold">
-                      {" "}
-                      <div className="d-flex justify-content-end align-items-center">
-                        <Link
-                          to={`/car/${car.id}`}
-                          className="btn btn-sm btn-outline-primary"
-                        >
-                          View Details
-                        </Link>
-                      </div>
-                    </span>
+                  <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-start mb-2">
+                      <h5 className="card-title fw-bold mb-0">{car.name}</h5>
+                      <span className="text-primary fw-bold">
+                        <div className="d-flex justify-content-end align-items-center">
+                          <Link
+                            to={`/car/${car.id}`}
+                            className="btn btn-sm btn-outline-primary"
+                          >
+                            View Details
+                          </Link>
+                        </div>
+                      </span>
+                    </div>
+                    <p className="card-text text-muted small mb-3">
+                      {car.type} • {car.model} •{" "}
+                      {car.transmission || "Automatic"}
+                    </p>
                   </div>
-                  <p className="card-text text-muted small mb-3">
-                    {car.type} • {car.model} • {car.transmission || "Automatic"}
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
 
-      {filteredCars.length > 6 && (
-        <div className="text-center mt-5">
-          <button className="btn btn-primary px-4 py-2">
-            Load More Vehicles
-          </button>
-        </div>
+          {filteredCars.length > carsPerPage && (
+            <div className="custom-pagination-wrapper mt-5">
+              <nav>
+                <ul className="pagination justify-content-center">
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      &laquo; Previous
+                    </button>
+                  </li>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (number) => (
+                      <li
+                        key={number}
+                        className={`page-item ${
+                          currentPage === number ? "active" : ""
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => paginate(number)}
+                        >
+                          {number}
+                        </button>
+                      </li>
+                    )
+                  )}
+
+                  <li
+                    className={`page-item ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next &raquo;
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+              <p className="text-center text-muted mt-2">
+                Page {currentPage} of {totalPages}
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
