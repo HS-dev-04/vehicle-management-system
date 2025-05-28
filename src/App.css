@@ -1,8 +1,9 @@
 .form-control:focus {
   box-shadow: none !important;
-  border-color: black; 
+  border-color: black;
   background-color: none !important;
 }
+
 .login-container {
   max-width: 400px;
   margin: 2rem auto;
@@ -41,11 +42,7 @@ button {
   cursor: pointer;
 }
 
-customButton:hover {
-  background-color:#ff5722;
-}
-
-.custom_Form{
+.custom_Form {
   width: 32% !important;
 }
 
@@ -53,13 +50,11 @@ customButton:hover {
   border-color: black !important;
 }
 
-/*--------------Car Styling---------------------*/
 .card:hover {
   background-color: #f9f9f9;
   transition: 0.3s;
 }
-<<<<<<< Updated upstream
-=======
+
 
 .customButtonStyling {
   color: white;
@@ -120,7 +115,6 @@ customButton:hover {
   color: white;
   border: none;
 }
-
 .customButtonStyling {
   color: white;
   position: relative;
@@ -217,18 +211,17 @@ customButton:hover {
   .nav-links.active {
     display: flex;
   }
-
   .sign-in {
     width: 86px;
     align-self: center;
     margin-right: 1px;
   }
-}
 
+}
 @media screen and (min-width: 760px) and (max-width: 1010px) {
   .Role {
     flex: 0 0 auto !important;
-    width: 40.6667% !important;
+    width: 40.6667% !important;  
     max-width: 41.6667% !important;
   }
 }
@@ -262,4 +255,4 @@ customButton:hover {
   border-color: #dee2e6;
   cursor: not-allowed;
 }
->>>>>>> Stashed changes
+

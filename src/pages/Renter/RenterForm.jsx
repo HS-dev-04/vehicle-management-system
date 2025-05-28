@@ -3,6 +3,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db, auth } from "../../../Firebase";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import CarForm from "../Form/CarFom";
 import "react-toastify/dist/ReactToastify.css";
 const RenterForm = () => {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ const RenterForm = () => {
     oneHourPrice: "",
     twentyFourHourPrice: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -69,127 +69,13 @@ const RenterForm = () => {
       <div className="card p-4 shadow w-100" style={{ maxWidth: "500px" }}>
         <ToastContainer position="top-right" autoClose={3000} />
         <h2 className="mb-4 text-center">Post Your Car for Rent</h2>
-
-        <form onSubmit={handleSubmit}>
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          <div className="mb-3">
-            <label className="form-label">Car Name</label>
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              placeholder="Enter car name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Type</label>
-            <input
-              type="text"
-              className="form-control"
-              name="type"
-              placeholder="Enter car type"
-              value={formData.type}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Model</label>
-            <input
-              type="text"
-              className="form-control"
-              name="model"
-              placeholder="Enter model"
-              value={formData.model}
-              onChange={handleChange}
-              required
-            />
-          </div>
-             <div className="mb-3">
-            <label className="form-label">Mile</label>
-            <input
-              type="text"
-              className="form-control"
-              name="mile"
-              placeholder="Enter mile"
-              value={formData.mile}
-              onChange={handleChange}
-              required
-            />
-          </div>
-               <div className="mb-3">
-            <label className="form-label">Fuel Type</label>
-            <input
-              type="text"
-              className="form-control"
-              name="fuelType"
-              placeholder="e.g Gasoline"
-              value={formData.fuelType}
-              onChange={handleChange}
-              required
-            />
-          </div>
-               <div className="mb-3">
-            <label className="form-label">Transmission</label>
-            <input
-              type="text"
-              className="form-control"
-              name="transmission"
-              placeholder="e.g Automatic"
-              value={formData.transmission}
-              onChange={handleChange}
-              required
-            />
-          </div>
-               <div className="mb-3">
-            <label className="form-label">Doors</label>
-            <input
-              type="text"
-              className="form-control"
-              name="doors"
-              placeholder="Enter doors"
-              value={formData.doors}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Price per Hour</label>
-            <input
-              type="number"
-              className="form-control"
-              name="oneHourPrice"
-              placeholder="Enter 1-hour price"
-              value={formData.oneHourPrice}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Price per 24 Hours</label>
-            <input
-              type="number"
-              className="form-control"
-              name="twentyFourHourPrice"
-              placeholder="Enter 24-hour price"
-              value={formData.twentyFourHourPrice}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary " disabled={loading}>
-            {loading ? "Submitting..." : "Submit Request"}
-          </button>
-        </form>
+          <CarForm
+          carData={formData}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          loading={loading}
+          showRoleSelector={false}
+        />
       </div>
     </div>
   );
