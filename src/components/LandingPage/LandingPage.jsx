@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Car_Pic from "../../assets/Car_Pic.jpeg";
+import Car_Pic from "../../../dist/assets/Car_Pic-B3j6kZpH-B3j6kZpH.jpeg";
 const Landing = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -32,7 +32,9 @@ const Landing = () => {
           </button>
         </div>
 
-        <div className="hamburger" onClick={toggleMenu}></div>
+        <div className="hamburger" onClick={toggleMenu}>
+          &#9776;
+        </div>
       </header>
 
       <section

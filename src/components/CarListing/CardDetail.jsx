@@ -3,6 +3,12 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../Firebase";
 import { ToastContainer, toast } from "react-toastify";
+import car1 from "../../../dist/assets/car1-DJAA6xJ2-DJAA6xJ2.avif";
+import car2 from "../../../dist/assets/car2-9TEypQN7-9TEypQN7.jpeg";
+import car3 from "../../../dist/assets/car3-CdT7_i8_-CdT7_i8_.webp";
+import car4 from "../../../dist/assets/car4-D85rijZ0-D85rijZ0.jpg";
+import car5 from "../../../dist/assets/car5-R3x2BmsM-R3x2BmsM.jpg";
+import car6 from "../../../dist/assets/car6-CLr8pv4--CLr8pv4-.jpg";
 import "react-toastify/dist/ReactToastify.css";
 import {
   FaCar,
@@ -15,13 +21,6 @@ import {
   FaImage,
 } from "react-icons/fa";
 import { GiCarDoor, GiGearStick } from "react-icons/gi";
-
-import car1 from "../../assets/car1.avif";
-import car2 from "../../assets/car2.jpeg";
-import car3 from "../../assets/car3.webp";
-import car4 from "../../assets/car4.jpg";
-import car5 from "../../assets/car5.jpg";
-import car6 from "../../assets/car6.jpg";
 
 const carImages = [car1, car2, car3, car4, car5, car6].filter(Boolean);
 
@@ -141,7 +140,7 @@ const CarDetails = () => {
               <div className="card border-0 shadow-sm h-100 text-center py-3">
                 <FaTachometerAlt className="fs-3 text-success mb-2 mx-auto" />
                 <h6 className="mb-0">Mileage</h6>
-                <p className="text-muted mb-0">{car.mile }</p>
+                <p className="text-muted mb-0">{car.mile}</p>
               </div>
             </div>
             <div className="col-6 col-md-3">
@@ -155,9 +154,7 @@ const CarDetails = () => {
               <div className="card border-0 shadow-sm h-100 text-center py-3">
                 <GiGearStick className="fs-3 text-success mb-2 mx-auto" />
                 <h6 className="mb-0">Transmission</h6>
-                <p className="text-muted mb-0">
-                  {car.transmission}
-                </p>
+                <p className="text-muted mb-0">{car.transmission}</p>
               </div>
             </div>
             <div className="col-6 col-md-3">

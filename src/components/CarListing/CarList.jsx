@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../Firebase";
 import { Link } from "react-router-dom";
+<<<<<<< Updated upstream
 import car1 from "../../assets/car1.avif";
 import car2 from "../../assets/car2.jpeg";
 import car3 from "../../assets/car3.webp";
@@ -9,6 +10,16 @@ import car4 from "../../assets/car4.jpg";
 import car5 from "../../assets/car5.jpg";
 import car6 from "../../assets/car6.jpg";
 import { FaCar, FaSearch, FaFilter, FaCalendarAlt } from "react-icons/fa";
+=======
+import car1 from "../../../dist/assets/car1-DJAA6xJ2-DJAA6xJ2.avif";
+import car2 from "../../../dist/assets/car2-9TEypQN7-9TEypQN7.jpeg";
+import car3 from "../../../dist/assets/car3-CdT7_i8_-CdT7_i8_.webp";
+import car4 from "../../../dist/assets/car4-D85rijZ0-D85rijZ0.jpg";
+import car5 from "../../../dist/assets/car5-R3x2BmsM-R3x2BmsM.jpg";
+import car6 from "../../../dist/assets/car6-CLr8pv4--CLr8pv4-.jpg";
+import { FaCar } from "react-icons/fa";
+import Filters from "../Filter/Filter";
+>>>>>>> Stashed changes
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -30,7 +41,11 @@ const CarList = () => {
           return index;
         }
       }
+<<<<<<< Updated upstream
       //using hashing for static pic
+=======
+
+>>>>>>> Stashed changes
       if (car.id) {
         let hash = 0;
         for (let i = 0; i < car.id.length; i++) {
@@ -91,6 +106,10 @@ const CarList = () => {
       });
 
       setFilteredCars(filtered);
+<<<<<<< Updated upstream
+=======
+      setCurrentPage(1);
+>>>>>>> Stashed changes
     };
 
     applyFilters();
