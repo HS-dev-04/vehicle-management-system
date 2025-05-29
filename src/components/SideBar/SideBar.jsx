@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FaCar } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
+
 const Sidebar = ({ role }) => {
   return (
     <div className="bg-dark text-white p-3" style={{ width: "250px" }}>
@@ -11,15 +12,22 @@ const Sidebar = ({ role }) => {
 
       <ul className="nav flex-column">
         {role === "admin" ? (
-          <Link to="/AddCarPost" className="nav-link text-white">
-            <FaCar /> <span>Add Car Post</span>
-          </Link>
+          <li className="nav-item mb-2">
+            <Link to="/AddCarPost" className="nav-link text-white d-flex align-items-center gap-2">
+              <FaCar />
+              <span>Add Car Post</span>
+            </Link>
+          </li>
         ) : role === "renter" ? (
-          <Link to="/renterCarPost" className="nav-link text-white">
-            <FaCar /> <span>Add Car Post</span>
-          </Link>
-        ):null}
+          <li className="nav-item mb-2">
+            <Link to="/renterCarPost" className="nav-link text-white d-flex align-items-center gap-2">
+              <FaCar />
+              <span>Add Car Post</span>
+            </Link>
+          </li>
+        ) : null}
 
+        {/* Notifications Link */}
         <li className="nav-item mb-2">
           {role === "admin" ? (
             <Link
@@ -43,30 +51,46 @@ const Sidebar = ({ role }) => {
               className="nav-link text-white d-flex align-items-center gap-2"
             >
               <i className="fa-solid fa-bell"></i>
-              <span> Notifications</span>
+              <span>Notifications</span>
             </Link>
           )}
         </li>
 
+        {/* Admin Approvals Link */}
         {role === "admin" && (
           <li className="nav-item mb-2">
-            
             <Link
               to="/AdminApprovals"
               className="nav-link text-white d-flex align-items-center gap-2"
             >
-              <RiAdminFill/>
+              <RiAdminFill />
               <span>Admin Approvals</span>
-              
             </Link>
           </li>
         )}
-        <Link to="/logout" className="nav-link text-white">
-        <CiLogout />
-          <span> Logout</span>
-        </Link>
+       
+        {role === "renter" && (
+  <li className="nav-item mb-2">
+    <Link
+      to="/RenterChat"
+      className="nav-link text-white d-flex align-items-center gap-2"
+    >
+      <i className="fa-solid fa-comments"></i>
+      <span>Rental Inquiries</span>
+    </Link>
+  </li>
+)}
+
+        {/* Logout Link */}
+        <li className="nav-item mb-2">
+          <Link to="/logout" className="nav-link text-white d-flex align-items-center gap-2">
+            <CiLogout />
+            <span>Logout</span>
+          </Link>
+        </li>
       </ul>
     </div>
   );
 };
+
 export default Sidebar;

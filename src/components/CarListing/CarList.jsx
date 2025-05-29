@@ -11,7 +11,7 @@ import car6 from "../../assets/car6.jpg";
 import { FaCar } from "react-icons/fa";
 import Filters from "../Filter/Filter";
 
-const CarList = () => {
+const CarList = ({userRole}) => {
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
   const [roleFilter, setRoleFilter] = useState("");
@@ -60,11 +60,14 @@ const CarList = () => {
       try {
         setIsLoading(true);
         const querySnapshot = await getDocs(collection(db, "cars"));
-        const carList = querySnapshot.docs.map((doc) => ({
+        let carList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
           imageIndex: getImageIndex({ id: doc.id, ...doc.data() }),
         }));
+         if (userRole === "renter") {
+          carList = carList.filter(car => car.role === "renter");
+        }
         setCars(carList);
         setFilteredCars(carList);
       } catch (error) {
@@ -75,7 +78,7 @@ const CarList = () => {
     };
 
     fetchCars();
-  }, []);
+  }, [userRole]);
 
   useEffect(() => {
     const applyFilters = () => {
@@ -103,8 +106,8 @@ const CarList = () => {
   return (
     <div className="container py-5">
       <div className="text-center mb-5">
-        <h1 className="display-5 fw-bold text-success">
-          <FaCar className="me-2" />
+        <h1 className="display-5 fw-bold text-success d-flex align-items-center justify-content-center">
+          <FaCar className="me-2" style={{fontSize:'1em'}} />
           Explore Our Vehicles
         </h1>
         <p className="lead text-muted">
@@ -117,6 +120,7 @@ const CarList = () => {
         roleFilter={roleFilter}
         setFilters={setFilters}
         setRoleFilter={setRoleFilter}
+        userRole={userRole}
       />
 
       <div className="mb-4 d-flex justify-content-between align-items-center">
@@ -141,7 +145,7 @@ const CarList = () => {
       ) : filteredCars.length === 0 ? (
         <div className="card shadow-sm border-0">
           <div className="card-body text-center py-5">
-            <div className="display-1 text-muted mb-3">
+            <div className="display-1 text-muted mb-3 d-flex align-items-center justify-content-center">
               <FaCar />
             </div>
             <h3 className="text-muted">No vehicles match your criteria</h3>

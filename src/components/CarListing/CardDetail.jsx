@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../Firebase";
 import { ToastContainer, toast } from "react-toastify";
+import { onAuthStateChanged } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
 import {
   FaCar,
@@ -13,8 +14,11 @@ import {
   FaClock,
   FaCarSide,
   FaImage,
+  FaComments
 } from "react-icons/fa";
 import { GiCarDoor, GiGearStick } from "react-icons/gi";
+import {auth} from '../../../Firebase';
+import ChatWindow from "../Chat/ChatWindow";
 
 import car1 from "../../assets/car1.avif";
 import car2 from "../../assets/car2.jpeg";
@@ -30,8 +34,18 @@ const CarDetails = () => {
   const [car, setCar] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(null);
-
+  const [showChat,setShowChat] = useState(false);
+  const [currentUserId,setCurrentUserId] = useState(null)
   useEffect(() => {
+     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+        console.log("Current user UID:", user.uid);
+      } else {
+        setCurrentUserId(null);
+        console.log("No user logged in");
+      }
+    });
     const fetchCar = async () => {
       try {
         setIsLoading(true);
@@ -60,6 +74,7 @@ const CarDetails = () => {
     };
 
     fetchCar();
+     return () => unsubscribe();
   }, [id]);
 
   //use HASHING code for picture
@@ -104,12 +119,19 @@ const CarDetails = () => {
       </div>
     );
   }
-
+  const HandleMessageClick = () => {  
+  if (!currentUserId) {
+    toast.error("Please log in to start a chat!");
+    return;
+  }
+  setShowChat(true);
+  toast.info("Opening Chat!");
+};
   return (
     <div className="container py-5">
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="text-center mb-5">
-        <h1 className="display-5 fw-bold text-black">
+        <h1 className="display-5 fw-bold text-black d-flex align-items-center justify-content-center">
           <FaCar className="me-2" />
           {car.name} - {car.model}
         </h1>
@@ -197,6 +219,13 @@ const CarDetails = () => {
                   <FaMoneyBillWave className="me-2 text-primary" />
                   Pricing
                 </h5>
+                <button
+                onClick={HandleMessageClick}
+                className="btn btn-primary d-flex align-items-center justify-content-center gap-2"
+                style={{padding:"12px"}}>
+                  <FaComments size={20}/>
+                  <span>Message about the car</span>
+                </button>
                 {car.role === "renter" ? (
                   <>
                     <div className="d-flex justify-content-between align-items-center mb-2">
@@ -232,8 +261,17 @@ const CarDetails = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div>      </div>
+      {showChat && (
+        <ChatWindow 
+          carId={car.id}
+          carName={`${car.name} - ${car.model}`}
+          onClose={() => setShowChat(false)}
+          currentUserId = {currentUserId}
+          carRole = {car.role}
+          carOwnerId={car.postedBy || car.createdBy}
+        />
+      )}
     </div>
   );
 };

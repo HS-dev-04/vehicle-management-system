@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 const AdminNotifications = () => {
   const [requests, setRequests] = useState([]);
-  
+  const [isLoading, setIsLoading] = useState(true);
   const fetchRequests = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "renterRequests"));
@@ -14,6 +14,9 @@ const AdminNotifications = () => {
       setRequests(data);
     } catch (error) {
       console.error("Error fetching renter requests:", error);
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -27,7 +30,15 @@ const AdminNotifications = () => {
         <div className="col-12">
           <h2 className="mb-4">Pending Renter Requests</h2>
           
-          {requests.length === 0 ? (
+      {isLoading ? (
+     
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary mb-3" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="text-muted">Loading notifications...</p>
+        </div>
+      ):    requests.length === 0 ? (
             <p>No pending requests.</p>
           ) : (
             <div className="row">
