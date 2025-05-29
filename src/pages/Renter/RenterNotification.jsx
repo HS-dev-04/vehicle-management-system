@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 const RenterNotification = () => {
   const [notifications, setNotifications] = useState([]);
   const [approvedRequests, setApprovedRequests] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -48,6 +48,9 @@ const RenterNotification = () => {
         console.error("Error fetching approved requests:", error);
         toast.error("Failed to load approved requests");
       }
+      finally { 
+        setIsLoading(false);
+      }
     };
 
     fetchNotifications();
@@ -59,7 +62,17 @@ const RenterNotification = () => {
       <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-center my-4">Renter Notifications</h2>
       <h4>Admin Posts</h4>
-      {notifications.length > 0 ? (
+      
+      {isLoading ? (
+      
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary mb-3" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="text-muted">Loading notifications...</p>
+        </div>
+      ):
+      notifications.length > 0 ? (
         <div>
           {notifications.map((notification) => (
             <div

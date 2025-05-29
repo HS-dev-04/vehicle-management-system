@@ -5,9 +5,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const BuyerNotification = () => {
   const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
+        setIsLoading(true);
         const q = query(
           collection(db, "notifications"),
           where("toRoles", "array-contains", "buyer"),
@@ -23,6 +25,8 @@ const BuyerNotification = () => {
       } catch (error) {
         console.error("Error fetching notifications:", error);
         toast.error("Failed to load notifications");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -33,8 +37,16 @@ const BuyerNotification = () => {
     <div className="container">
       <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-center my-4">Buyer Notifications</h2>
-
-      {notifications.length > 0 ? (
+      
+      {isLoading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary mb-3" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="text-muted">Loading notifications...</p>
+        </div>
+      ):
+      notifications.length > 0 ? (
         <div>
           {notifications.map((notification) => (
             <div

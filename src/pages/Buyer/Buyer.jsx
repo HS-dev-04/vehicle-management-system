@@ -7,7 +7,7 @@ const BuyerDashboard = ({ role }) => {
       <div className="flex-grow-1 p-4">
         <h2>Dashboard</h2>
         <p>Welcome to the {role} dashboard. Use the sidebar to navigate.</p>
-        <CarList />
+        <CarList userRole={role}/>
       </div>
     </div>
   );

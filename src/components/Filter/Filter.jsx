@@ -1,6 +1,12 @@
 import { FaSearch, FaFilter, FaCalendarAlt } from "react-icons/fa";
 
-const Filters = ({ filters, roleFilter, setFilters, setRoleFilter }) => {
+const Filters = ({
+  filters,
+  roleFilter,
+  setFilters,
+  setRoleFilter,
+  userRole,
+}) => {
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -9,7 +15,7 @@ const Filters = ({ filters, roleFilter, setFilters, setRoleFilter }) => {
   return (
     <div className="card mb-5 border-0 shadow-lg">
       <div className="card-header bg-success text-white py-3">
-        <h5 className="mb-0">
+        <h5 className="mb-0 d-flex align-items-center">
           <FaFilter className="me-2" />
           Filter Options
         </h5>
@@ -17,8 +23,8 @@ const Filters = ({ filters, roleFilter, setFilters, setRoleFilter }) => {
       <div className="card-body">
         <div className="row g-3">
           <div className="col-md-4">
-            <label className="form-label fw-bold">
-              <FaSearch className="me-2" />
+            <label className="form-label fw-bold d-flex align-items-center">
+              <FaSearch className="me-2 d-flex" />
               Search by Name
             </label>
             <input
@@ -31,7 +37,7 @@ const Filters = ({ filters, roleFilter, setFilters, setRoleFilter }) => {
             />
           </div>
           <div className="col-md-4">
-            <label className="form-label fw-bold">
+            <label className="form-label fw-bold d-flex align-items-center">
               <FaCalendarAlt className="me-2" />
               Search by Model
             </label>
@@ -44,30 +50,31 @@ const Filters = ({ filters, roleFilter, setFilters, setRoleFilter }) => {
               onChange={handleFilterChange}
             />
           </div>
-          <div className="Role col-md-4">
-            <label className="form-label">Filter by Role</label>
-            <div className="d-flex gap-4">
-              {["", "buyer", "renter"].map((role) => (
-                <div className="form-check" key={role || "all"}>
-                  <input
-                    type="radio"
-                    id={role || "all"}
-                    name="roleFilter"
-                    className="form-check-input"
-                    value={role}
-                    checked={roleFilter === role}
-                    onChange={(e) => setRoleFilter(e.target.value)}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor={role || "all"}
-                  >
-                    {role === "" ? "All" : role.charAt(0).toUpperCase() + role.slice(1)}
-                  </label>
-                </div>
-              ))}
+          {userRole !== "renter" && (
+            <div className="col-md-4">
+              <label className="form-label fw-bold">Filter by Role</label>
+              <div className="d-flex gap-3 flex-wrap">
+                {["", "buyer", "renter"].map((role) => (
+                  <div className="form-check" key={role || "all"}>
+                    <input
+                      type="radio"
+                      id={role || "all"}
+                      name="roleFilter"
+                      className="form-check-input"
+                      value={role}
+                      checked={roleFilter === role}
+                      onChange={(e) => setRoleFilter(e.target.value)}
+                    />
+                    <label className="form-check-label" htmlFor={role || "all"}>
+                      {role === ""
+                        ? "All"
+                        : role.charAt(0).toUpperCase() + role.slice(1)}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

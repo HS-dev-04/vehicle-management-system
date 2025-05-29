@@ -32,7 +32,9 @@ const Landing = () => {
           </button>
         </div>
 
-        <div className="hamburger" onClick={toggleMenu}></div>
+        <div className="hamburger" onClick={toggleMenu}>
+          &#9776;
+        </div>
       </header>
 
       <section
