@@ -51,6 +51,8 @@ const RenterForm = () => {
         fromRole: "renter",
         toRole: "admin",
         createdBy: user.uid,
+        ownerId: user.uid,  
+        postedBy: user.uid,
         createdAt: Timestamp.now(),
       });
       toast.success("Your request for post goes to admin");
