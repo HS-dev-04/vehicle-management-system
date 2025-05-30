@@ -149,7 +149,7 @@ const ChatWindow = ({
             recipientId: "admin",
             recipientRole: "admin",
             recipientName: "Admin Support",
-            carRole: carRole,
+            carRole: "buyer",
             lastMessage: newMessage,
             lastMessageTime: serverTimestamp(),
             unreadByAdmin: true,
@@ -180,7 +180,7 @@ const ChatWindow = ({
           recipientId: carOwnerId,
           recipientRole: "renter",
           recipientName: "Car Owner",
-          carRole: carRole,
+          carRole: "renter",
           lastMessage: newMessage,
           lastMessageTime: serverTimestamp(),
           unreadByAdmin: false,
@@ -197,7 +197,6 @@ const ChatWindow = ({
 
       setNewMessage("");
       console.log("Message sent successfully for car:", carId);
-      toast.success(`Message sent to ${recipient.name}!`);
     } catch (error) {
       console.error("Error sending message:", error);
       alert("Failed to send message. Please try again.");

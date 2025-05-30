@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 const AdminApprovals = () => {
   const [requests, setRequests] = useState([]);
   const [loadingId, setLoadingId] = useState(null); 
-
+  const [isLoading, setIsLoading] = useState(true);
   const fetchRequests = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "renterRequests"));
@@ -25,6 +25,8 @@ const AdminApprovals = () => {
     } catch (error) {
       toast.error("Failed to fetch requests.");
       console.error("Error fetching requests:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,10 +77,15 @@ const AdminApprovals = () => {
 
   return (
     <div className="container mt-4">
-      <ToastContainer position="top-right" autoClose={3000} />
-      <h2>Admin Approval Requests</h2>
-
-      {requests.length === 0 ? (
+      <ToastContainer position="top-right" autoClose={3000} />      <h2>Admin Approval Requests</h2>
+      {isLoading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-2">Loading requests...</p>
+        </div>
+      ) : requests.length === 0 ? (
         <p>No pending requests.</p>
       ) : (
         <div className="row">

@@ -5,17 +5,7 @@ import { db } from "../../../Firebase";
 import { ToastContainer, toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  FaCar,
-  FaGasPump,
-  FaTachometerAlt,
-  FaCalendarAlt,
-  FaMoneyBillWave,
-  FaClock,
-  FaCarSide,
-  FaImage,
-  FaComments
-} from "react-icons/fa";
+import {FaCar,FaGasPump,FaTachometerAlt,FaCalendarAlt,FaMoneyBillWave,FaClock,FaCarSide,FaImage,FaComments} from "react-icons/fa";
 import { GiCarDoor, GiGearStick } from "react-icons/gi";
 import {auth} from '../../../Firebase';
 import ChatWindow from "../Chat/ChatWindow";
@@ -35,7 +25,8 @@ const CarDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(null);
   const [showChat,setShowChat] = useState(false);
-  const [currentUserId,setCurrentUserId] = useState(null)
+  const [currentUserId,setCurrentUserId] = useState(null);
+  const [hasShownSuccessToast, setHasShownSuccessToast] = useState(false);
   useEffect(() => {
      const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -51,7 +42,6 @@ const CarDetails = () => {
         setIsLoading(true);
         const docRef = doc(db, "cars", id);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const carData = { id: docSnap.id, ...docSnap.data() };
           setCar(carData);
@@ -61,7 +51,10 @@ const CarDetails = () => {
               : Math.abs(carData.id?.hashCode() || 0) % carImages.length;
           setCurrentImage(carImages[imgIndex]);
 
-          toast.success("Car details loaded successfully!");
+          if (!hasShownSuccessToast) {
+            toast.success("Car details loaded successfully!");
+            setHasShownSuccessToast(true);
+          }
         } else {
           toast.error("No such car found!");
         }
@@ -261,7 +254,8 @@ const CarDetails = () => {
               </div>
             </div>
           </div>
-        </div>      </div>
+        </div>
+        </div>
       {showChat && (
         <ChatWindow 
           carId={car.id}

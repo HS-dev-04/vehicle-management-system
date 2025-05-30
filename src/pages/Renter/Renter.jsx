@@ -1,6 +1,7 @@
 import CarList from "../../components/CarListing/CarList";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Sidebar from "../../components/SideBar/SideBar";
+import Profile from "../../components/Profile/Profile"
 const RenterDashboard = ({ role }) => {
   return (
     <div className="d-flex" style={{ minHeight: "100vh" }}>

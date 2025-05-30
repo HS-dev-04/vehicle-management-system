@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FaCar } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
-
+import { FaUser } from "react-icons/fa";
 const Sidebar = ({ role }) => {
   return (
     <div className="bg-dark text-white p-3" style={{ width: "250px" }}>
@@ -27,7 +27,7 @@ const Sidebar = ({ role }) => {
           </li>
         ) : null}
 
-        {/* Notifications Link */}
+      
         <li className="nav-item mb-2">
           {role === "admin" ? (
             <Link
@@ -55,8 +55,17 @@ const Sidebar = ({ role }) => {
             </Link>
           )}
         </li>
-
-        {/* Admin Approvals Link */}
+                {(role === "buyer" || role === "renter") && (
+          <li className="nav-item mb-2">
+            <Link
+              to={role === "buyer" ? "/buyer-profile" : "/renter-profile"}
+              className="nav-link text-white d-flex align-items-center gap-2"
+            >
+              <FaUser />
+              <span>Profile</span>
+            </Link>
+          </li>
+        )}        
         {role === "admin" && (
           <li className="nav-item mb-2">
             <Link

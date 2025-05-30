@@ -23,6 +23,7 @@ import RenterChatInterface from "./components/Chat/RenterChatInterface";
 import AdminChatInterface from "./components/Chat/AdminChatInterface";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Profile from "./components/Profile/Profile"
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem("authToken") !== null;
@@ -47,7 +48,23 @@ const App = () => {
             </Protected>
           }
         />
-
+        <Route
+          path="/buyer-profile"
+          element={
+            <Protected isAuthenticated={isAuthenticated}>
+              <Profile userRole="buyer" />
+            </Protected>
+          }
+        />
+        
+        <Route
+          path="/renter-profile"
+          element={
+            <Protected isAuthenticated={isAuthenticated}>
+              <Profile userRole="renter" />
+            </Protected>
+          }
+        />
         <Route
           path="/buyer-dashboard"
           element={
