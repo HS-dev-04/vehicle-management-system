@@ -269,7 +269,6 @@ const Profile = () => {
       toast.success(`Role changed to ${ROLE_CONFIG[newRole].label} successfully! Logging you out...`);
       setIsChangingRole(false);
 
-      // Log out the user after role change
       setTimeout(async () => {
         try {
           await signOut(auth);
