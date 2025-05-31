@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { updateProfile } from "firebase/auth";
+import { updateProfile, signOut } from "firebase/auth";
 import { db, auth } from "../../../Firebase";
 import { ToastContainer, toast } from "react-toastify";
 import { FaUser, FaEnvelope, FaUserTag, FaEdit, FaSave, FaTimes } from "react-icons/fa";
@@ -179,13 +179,12 @@ const RoleManagement = ({ userInfo, isChangingRole, setIsChangingRole, onRoleCha
           <h3 className="text-lg font-medium text-yellow-800 mb-3 flex items-center">
             <FaUserTag className="mr-1" />
             Confirm Role Change
-          </h3>
-          <p className="text-yellow-700 mb-4">
+          </h3>          <p className="text-yellow-700 mb-4">
             Are you sure you want to change your role from <strong>{currentRoleConfig.label}</strong> to{" "}
             <strong>{ROLE_CONFIG[oppositeRole].label}</strong>?
             <br />
             <span className="text-sm text-yellow-600">
-              You will be redirected to the appropriate dashboard after the change.
+              You will be logged out after the role change and need to log in again.
             </span>
           </p>
           <div className="flex space-x-3">
@@ -254,7 +253,6 @@ const Profile = () => {
       setLoading(false);
     }
   }, [userInfo.displayName]);
-
   const handleRoleChange = useCallback(async () => {
     const currentRoleConfig = ROLE_CONFIG[userInfo.role];
     const newRole = currentRoleConfig?.opposite;
@@ -268,11 +266,18 @@ const Profile = () => {
       });
 
       setUserInfo(prev => ({ ...prev, role: newRole }));
-      toast.success(`Role changed to ${ROLE_CONFIG[newRole].label} successfully!`);
+      toast.success(`Role changed to ${ROLE_CONFIG[newRole].label} successfully! Logging you out...`);
       setIsChangingRole(false);
 
-      setTimeout(() => {
-        navigate(ROLE_CONFIG[newRole].dashboard);
+      // Log out the user after role change
+      setTimeout(async () => {
+        try {
+          await signOut(auth);
+          navigate("/");
+        } catch (error) {
+          console.error("Error signing out:", error);
+          toast.error("Error logging out. Please refresh the page.");
+        }
       }, 2000);
     } catch (error) {
       console.error("Error updating role:", error);
