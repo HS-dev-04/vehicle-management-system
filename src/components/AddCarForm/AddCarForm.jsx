@@ -44,8 +44,6 @@ const AddCarForm = () => {
           toRoles: ["buyer", "seller"],
           type: "new_car",
         });
-
-        console.log("Notification sent successfully.");
       } catch (error) {
         console.error("Error sending notification:", error);
       }

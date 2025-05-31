@@ -31,10 +31,8 @@ const CarDetails = () => {
      const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUserId(user.uid);
-        console.log("Current user UID:", user.uid);
       } else {
         setCurrentUserId(null);
-        console.log("No user logged in");
       }
     });
     const fetchCar = async () => {

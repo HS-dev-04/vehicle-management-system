@@ -30,38 +30,24 @@ const ChatWindow = ({
   const [recipient, setRecipient] = useState(null);
   const messagesEndRef = useRef(null);
   const getRecipient = () => {
-    console.log(
-      "ChatWindow - getRecipient() called with carRole:",
-      carRole,
-      "carOwnerId:",
-      carOwnerId
-    );
-
     if (carRole === "buyer") {
-      console.log("ChatWindow - Routing to admin (sale car)");
       return {
         id: "admin",
         name: "Admin Support",
         role: "admin",
       };
     } else if (carRole === "renter" && carOwnerId) {
-      console.log(
-        "ChatWindow - Routing to car owner (rental car):",
-        carOwnerId
-      );
       return {
         id: carOwnerId,
         name: "Car Owner",
         role: "renter",
       };
     }
-    console.log("ChatWindow - No recipient found, returning null");
     return null;
   };
   useEffect(() => {
     const fetchUserData = async () => {
       if (!currentUserId) {
-        console.error("No user ID provided");
         setUserLoading(false);
         return;
       }
@@ -76,13 +62,11 @@ const ChatWindow = ({
             uid: currentUserId,
             ...userDoc.data(),
           });
-          console.log("User data loaded:", userDoc.data());
         } else {
-          console.error("User document not found");
+
           toast.error("User data not found. Please try logging in again.");
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
         toast.error("Failed to load user data. Please try again.");
       } finally {
         setUserLoading(false);
@@ -105,8 +89,7 @@ const ChatWindow = ({
       snapshot.forEach((doc) => {
         messagesList.push({ id: doc.id, ...doc.data() });
       });
-      setMessages(messagesList);
-      console.log(`Loaded ${messagesList.length} messages for car ${carId}`);
+      setMessages(messagesList);  
     });
 
     return () => unsubscribe();
@@ -158,18 +141,8 @@ const ChatWindow = ({
           },
           { merge: true }
         );
-        console.log("Sale car message sent to admin for car:", carId);
+        
       } else if (carRole === "renter" && carOwnerId) {
-        console.log("ChatWindow - Creating rental chat room with data:", {
-          carId: carId,
-          carName: carName,
-          buyerId: currentUser.uid || currentUser.id,
-          buyerName: currentUser.name,
-          recipientId: carOwnerId,
-          recipientRole: "renter",
-          carRole: carRole,
-        });
-
         await setDoc(chatRoomRef, {
           carId: carId,
           carName: carName,
@@ -187,18 +160,10 @@ const ChatWindow = ({
           unreadByRenter: true,
           createdAt: serverTimestamp(),
         });
-        console.log(
-          "Rental car message sent to car owner:",
-          carOwnerId,
-          "for car:",
-          carId
-        );
       }
 
       setNewMessage("");
-      console.log("Message sent successfully for car:", carId);
     } catch (error) {
-      console.error("Error sending message:", error);
       alert("Failed to send message. Please try again.");
     } finally {
       setIsLoading(false);

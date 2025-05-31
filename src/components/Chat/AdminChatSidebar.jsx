@@ -27,7 +27,6 @@ const AdminChatSidebar = ({ onSelectChat }) => {
         }
       });
       setChatRooms(rooms);
-      console.log("Admin: Found", rooms.length, "sale inquiry chat rooms");
     });
 
     return () => unsubscribe();
