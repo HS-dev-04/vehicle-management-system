@@ -42,7 +42,9 @@ const Login = ({ setIsAuthenticated }) => {
       navigate("/admin");
       return;
     }
-
+  useEffect(() => {
+    return () => toast.dismiss();
+  }, []);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
