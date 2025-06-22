@@ -34,7 +34,7 @@ const Login = ({ setIsAuthenticated }) => {
       localStorage.setItem("authToken", "admin-static-token");
       setIsAuthenticated(true);
       toast.dismiss(toastId);
-      toast.success("Admin login successful");
+    
       navigate("/admin");
       return;
     }
