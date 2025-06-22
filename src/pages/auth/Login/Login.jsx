@@ -23,7 +23,7 @@ const Login = ({ setIsAuthenticated }) => {
 
   const adminEmail = "admin@gmail.com";
   const adminPassword = "admin123";
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -33,12 +33,8 @@ const Login = ({ setIsAuthenticated }) => {
     if (email === adminEmail && password === adminPassword) {
       localStorage.setItem("authToken", "admin-static-token");
       setIsAuthenticated(true);
-      toast.update(toastId, {
-        render: "Admin login successful",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.dismiss(toastId);
+      toast.success("Admin login successful");
       navigate("/admin");
       return;
     }
@@ -59,14 +55,8 @@ const Login = ({ setIsAuthenticated }) => {
         localStorage.setItem("authToken", userCredential.user.accessToken);
         setIsAuthenticated(true);
         dispatch(updateLoginData({ role: userData.role, email }));
-
-        toast.update(toastId, {
-          render: "Login successful",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
-
+        toast.dismiss(toastId);
+        toast.success("Login successful");
         if (userData.role === "buyer") {
           navigate("/purchaser-dashboard");
         } else if (userData.role === "renter") {
@@ -75,12 +65,8 @@ const Login = ({ setIsAuthenticated }) => {
           navigate("/");
         }
       } else {
-        toast.update(toastId, {
-          render: "User profile not found in Firestore.",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
+         toast.dismiss(toastId);
+      toast.error("User profile not found in Firestore.");
       }
     } catch (error) {
       console.error("Login failed:", error.message);
@@ -93,15 +79,13 @@ const Login = ({ setIsAuthenticated }) => {
       } else {
         message = "Login error: " + "Incorrect email or password.";
       }
-
-      toast.update(toastId, {
-        render: message,
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+       toast.dismiss(toastId);
+      toast.error("User profile not found in Firestore.");
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 100); 
     }
   };
 
