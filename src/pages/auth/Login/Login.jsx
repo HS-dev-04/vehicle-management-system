@@ -42,9 +42,7 @@ const Login = ({ setIsAuthenticated }) => {
       navigate("/admin");
       return;
     }
-  useEffect(() => {
-    return () => toast.dismiss();
-  }, []);
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -70,7 +68,7 @@ const Login = ({ setIsAuthenticated }) => {
         });
 
         if (userData.role === "buyer") {
-          navigate("/buyer-dashboard");
+          navigate("/purchaser-dashboard");
         } else if (userData.role === "renter") {
           navigate("/renter");
         } else {

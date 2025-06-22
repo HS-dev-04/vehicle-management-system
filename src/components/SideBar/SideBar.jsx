@@ -58,7 +58,7 @@ const Sidebar = ({ role }) => {
                 {(role === "buyer" || role === "renter") && (
           <li className="nav-item mb-2">
             <Link
-              to={role === "buyer" ? "/buyer-profile" : "/renter-profile"}
+              to={role === "buyer" ? "/purchaser-profile" : "/renter-profile"}
               className="nav-link text-white d-flex align-items-center gap-2"
             >
               <FaUser />

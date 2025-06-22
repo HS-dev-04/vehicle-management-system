@@ -13,7 +13,7 @@ const ROLE_CONFIG = {
     description: "As a buyer, you can browse and purchase vehicles.",
     bgColor: "bg-green-100",
     textColor: "text-green-800",
-    dashboard: "/buyer-dashboard",
+    dashboard: "/purchaser-dashboard",
     opposite: "renter"
   },
   renter: {

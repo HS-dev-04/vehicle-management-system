@@ -4,31 +4,53 @@ import AdminChatWindow from "./AdminChatWindow";
 
 const AdminChatInterface = () => {
   const [selectedChat, setSelectedChat] = useState(null);
-
+  const [showSidebar, setShowSidebar] = useState(true);
+  
   const handleSelectChat = (chatRoom) => {
     setSelectedChat(chatRoom);
+    if (window.innerWidth < 1024) {
+      setShowSidebar(false);
+    }
   };
+
+  const handleBackToSidebar = () => {
+    setShowSidebar(true);
+    if (window.innerWidth < 1024) {
+      setSelectedChat(null);
+    }
+  };
+
   return (
-    <div className="h-full w-full">
+    <div className="h-screen w-full p-2 sm:p-4">
       <div
-        className="flex h-[75vh] border border-gray-200 rounded-xl overflow-hidden shadow-lg
-                     max-lg:flex-col max-lg:h-[calc(100vh-180px)]
-                     max-sm:h-[calc(100vh-150px)] max-sm:rounded-lg"
+        className="flex h-[calc(100vh-16px)] sm:h-[calc(100vh-32px)] 
+                   border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg
+                   bg-white"
       >
+        {/* Sidebar - Responsive */}
         <div
-          className="w-[35%] min-w-[280px] bg-gray-50 border-r-2 border-gray-200
-                       max-lg:w-[40%] max-lg:min-w-[250px]
-                       max-md:w-full max-md:h-[45%] max-md:min-w-auto max-md:border-r-0 max-md:border-b-2
-                       max-sm:h-[40%]"
+          className={`
+            w-full sm:w-[380px] md:w-[400px] lg:w-[35%] lg:min-w-[320px] xl:min-w-[380px]
+            bg-gray-50 border-r-0 sm:border-r-2 border-gray-200 h-full
+            ${showSidebar ? "block" : "hidden"}
+            ${selectedChat && !showSidebar ? "hidden" : ""}
+          `}
         >
           <AdminChatSidebar onSelectChat={handleSelectChat} />
         </div>
+        
+        {/* Chat Window - Responsive */}
         <div
-          className="flex-1 bg-white
-                       max-md:h-[55%]
-                       max-sm:h-[60%]"
+          className={`
+            flex-1 bg-white min-w-0 h-full
+            ${!showSidebar || selectedChat ? "block" : "hidden sm:block"}
+            ${showSidebar && !selectedChat ? "hidden sm:block" : ""}
+          `}
         >
-          <AdminChatWindow selectedChat={selectedChat} />
+          <AdminChatWindow
+            selectedChat={selectedChat}
+            onBackToSidebar={handleBackToSidebar}
+          />
         </div>
       </div>
     </div>
