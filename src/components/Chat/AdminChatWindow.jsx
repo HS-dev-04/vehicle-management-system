@@ -10,9 +10,9 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../Firebase";
-import { FaPaperPlane, FaUser, FaUserShield, FaCar } from "react-icons/fa";
+import { FaPaperPlane, FaUser, FaUserShield, FaCar, FaArrowLeft } from "react-icons/fa";
 
-const AdminChatWindow = ({ selectedChat }) => {
+const AdminChatWindow = ({ selectedChat, onBackToSidebar }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +20,7 @@ const AdminChatWindow = ({ selectedChat }) => {
 
   const adminName = "Admin Support";
   const adminId = "admin";
+
   useEffect(() => {
     if (!selectedChat) return;
 
@@ -32,7 +33,6 @@ const AdminChatWindow = ({ selectedChat }) => {
         messagesList.push({ id: doc.id, ...doc.data() });
       });
       setMessages(messagesList);
-
       markAsRead();
     });
 
@@ -109,111 +109,156 @@ const AdminChatWindow = ({ selectedChat }) => {
       return "";
     }
   };
+
   if (!selectedChat) {
     return (
-      <div
-        className="h-full flex flex-col items-center justify-center text-gray-500 p-8 bg-gray-50
-                     max-sm:p-6"
-      >
-        <FaCar className="text-6xl mb-4 text-gray-300 max-sm:text-5xl" />
-        <h4 className="text-xl font-semibold mb-2 text-gray-600 max-sm:text-lg">
-          Select a car inquiry to start chatting
-        </h4>
-        <p className="text-center text-gray-500 max-w-sm max-sm:text-sm">
-          Choose a conversation from the sidebar to view and respond to customer
-          messages.
-        </p>
+      <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
+        <div className="text-center max-w-md mx-auto">
+          {/* Professional Car Icon */}
+          <div className="bg-blue-100 p-6 sm:p-8 rounded-full inline-flex mb-6 sm:mb-8">
+            <FaCar className="text-3xl sm:text-4xl lg:text-5xl text-blue-600" />
+          </div>
+          
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
+            Select a customer inquiry to start chatting
+          </h3>
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6 sm:mb-8">
+            Choose a conversation from the sidebar to view and respond to
+            customer messages about cars.
+          </p>
+
+          {/* Mobile Back Button */}
+          <button
+            onClick={onBackToSidebar}
+            className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 shadow-sm md:hidden"
+          >
+            <FaArrowLeft className="text-sm" />
+            <span className="text-sm sm:text-base">Back to Conversations</span>
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div
-        className="p-4 border-b-2 border-gray-200 bg-white shadow-sm
-                     max-sm:p-3"
-      >
-        <div className="chat-info">
-          <h4 className="text-lg font-semibold text-gray-800 m-0 mb-1 max-sm:text-base">
-            🚗 {selectedChat.carName}
-          </h4>
-          <p className="text-sm text-gray-600 m-0 max-sm:text-xs">
-            💬 Chatting with:{" "}
-            <strong className="text-blue-600">{selectedChat.buyerName}</strong>
-          </p>
+    <div className="h-full w-full flex flex-col bg-white shadow-sm">
+      {/* Professional Header */}
+      <div className="flex-shrink-0 p-3 sm:p-4 lg:p-5 border-b border-gray-200 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white flex items-center gap-3 sm:gap-4 min-h-[60px] sm:min-h-[70px] lg:min-h-[75px]">
+        {/* Mobile Back Button */}
+        <button
+          onClick={onBackToSidebar}
+          className="p-2 text-white hover:bg-blue-700 rounded-full transition-colors duration-200 flex-shrink-0 md:hidden"
+        >
+          <FaArrowLeft className="text-sm sm:text-base" />
+        </button>
+
+        {/* Chat Info */}
+        <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+          <div className="bg-blue-500 p-2 sm:p-2.5 rounded-full flex-shrink-0">
+            <FaCar className="text-white text-sm sm:text-base lg:text-lg" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm sm:text-base lg:text-lg font-semibold m-0 truncate">
+              {selectedChat.carName}
+            </h3>
+            <div className="flex items-center text-xs sm:text-sm text-blue-100 mt-0.5 sm:mt-1">
+              <FaUser className="mr-1 sm:mr-2 text-xs flex-shrink-0" />
+              <span className="truncate">Chatting with {selectedChat.buyerName}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div
-        className="flex-1 overflow-y-auto p-4 bg-gray-50 max-sm:p-3"
+      {/* Messages Container */}
+      <div 
+        className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 bg-gray-50 min-h-0"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {messages.length === 0 ? (
-          <div className="text-center text-gray-500 mt-8 max-sm:mt-6">
-            <p className="text-base mb-2 max-sm:text-sm">
-              No messages yet for this car
-            </p>
-            <small className="text-sm opacity-70 max-sm:text-xs">
-              Customer messages will appear here
-            </small>
+          <div className="h-full flex items-center justify-center text-gray-500">
+            <div className="text-center">
+              <div className="bg-gray-200 p-4 sm:p-6 rounded-full inline-flex mb-4 sm:mb-6">
+                <FaUser className="text-2xl sm:text-3xl text-gray-400" />
+              </div>
+              <p className="text-sm sm:text-base lg:text-lg mb-2 sm:mb-3 font-medium">
+                No messages yet in this conversation
+              </p>
+              <small className="text-xs sm:text-sm text-gray-400 block max-w-xs mx-auto leading-relaxed">
+                Customer messages will appear here
+              </small>
+            </div>
           </div>
         ) : (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`mb-4 max-w-[85%] animate-[slideIn_0.3s_ease-in] max-sm:mb-3 max-sm:max-w-[90%] ${
-                message.senderRole === "admin" ? "ml-auto" : "mr-auto"
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-2 text-xs max-sm:text-sm">
-                {message.senderRole === "admin" ? (
-                  <FaUserShield className="w-4 h-4 text-green-500 max-sm:w-5 max-sm:h-5" />
-                ) : (
-                  <FaUser className="w-4 h-4 text-blue-500 max-sm:w-5 max-sm:h-5" />
-                )}
-                <span className="font-semibold text-gray-700">
-                  {message.senderName}
-                </span>
-                <span className="text-gray-500 ml-auto">
-                  {formatTime(message.timestamp)}
-                </span>
-              </div>
+          <div className="space-y-4 sm:space-y-6 pb-4">
+            {messages.map((message) => (
               <div
-                className={`p-3 rounded-2xl shadow-sm break-words leading-relaxed max-sm:p-4 max-sm:text-base ${
+                key={message.id}
+                className={`flex flex-col max-w-[85%] sm:max-w-[75%] lg:max-w-[70%] ${
                   message.senderRole === "admin"
-                    ? "bg-green-500 text-white ml-4"
-                    : "bg-white text-gray-800 mr-4 border border-gray-200"
+                    ? "ml-auto items-end" 
+                    : "mr-auto items-start"
                 }`}
               >
-                {message.text}
+                {/* Message Header */}
+                <div className={`flex items-center gap-2 mb-2 text-xs sm:text-sm text-gray-600 ${
+                  message.senderRole === "admin" ? "flex-row-reverse" : ""
+                }`}>
+                  {message.senderRole === "admin" ? (
+                    <FaUserShield className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
+                  ) : (
+                    <FaUser className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
+                  )}
+                  <span className="font-medium text-xs sm:text-sm">
+                    {message.senderName}
+                  </span>
+                  <span className="text-gray-400 text-xs">
+                    {formatTime(message.timestamp)}
+                  </span>
+                </div>
+
+                {/* Message Bubble */}
+                <div
+                  className={`p-3 sm:p-4 rounded-2xl shadow-sm break-words text-sm sm:text-base leading-relaxed ${
+                    message.senderRole === "admin"
+                      ? "bg-green-600 text-white rounded-br-sm"
+                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm"
+                  }`}
+                >
+                  {message.text}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-gray-200 bg-white max-sm:p-3">
-        <div className="flex gap-3 items-center">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder={`Reply to ${selectedChat.buyerName}...`}
-            disabled={isLoading}
-            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-3xl outline-none transition-colors duration-200 text-sm
-                      focus:border-green-500 disabled:bg-gray-50 disabled:opacity-70
-                      max-sm:text-base max-sm:px-4 max-sm:py-3 max-sm:min-h-[48px]"
-          />
+      {/* Message Input */}
+      <div className="flex-shrink-0 p-3 sm:p-4 lg:p-5 border-t border-gray-200 bg-white">
+        <div className="flex gap-2 sm:gap-3 items-end">
+          <div className="flex-1 relative">
+            <textarea
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={`Reply to ${selectedChat.buyerName}...`}
+              disabled={isLoading}
+              rows="1"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl resize-none outline-none transition-all duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-100 disabled:bg-gray-50 text-sm sm:text-base min-h-[40px] sm:min-h-[44px]"
+              style={{ 
+                maxHeight: "120px",
+                overflowY: "auto"
+              }}
+            />
+          </div>
+          
           <button
             onClick={sendMessage}
             disabled={isLoading || !newMessage.trim()}
-            className="bg-green-500 text-white border-0 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer transition-all duration-200 shadow-md
-                      hover:bg-green-600 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-                      max-sm:w-12 max-sm:h-12 max-sm:min-w-[48px] max-sm:min-h-[48px]"
+            className="bg-green-600 hover:bg-green-700 text-white border-0 rounded-xl px-3 sm:px-4 lg:px-5 py-2 sm:py-3 flex items-center gap-2 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex-shrink-0 min-h-[40px] sm:min-h-[44px]"
           >
-            <FaPaperPlane />
+            <FaPaperPlane className="text-sm" />
+            <span className="hidden sm:inline text-sm sm:text-base">Send</span>
           </button>
         </div>
       </div>

@@ -114,8 +114,8 @@ const ChatWindow = ({
         timestamp: serverTimestamp(),
         carId: carId,
         carName: carName,
-        recipientId: recipient.id,
-        recipientRole: recipient.role,
+        recipientId: recipient?.id || null,
+        recipientRole: recipient?.role || null,
       });
       const chatRoomRef = doc(db, "chatRooms", carId);
 
@@ -159,7 +159,7 @@ const ChatWindow = ({
           unreadByAdmin: false,
           unreadByRenter: true,
           createdAt: serverTimestamp(),
-        });
+        },{merge: true});
       }
 
       setNewMessage("");

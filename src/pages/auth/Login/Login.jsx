@@ -68,7 +68,7 @@ const Login = ({ setIsAuthenticated }) => {
         });
 
         if (userData.role === "buyer") {
-          navigate("/buyer-dashboard");
+          navigate("/purchaser-dashboard");
         } else if (userData.role === "renter") {
           navigate("/renter");
         } else {

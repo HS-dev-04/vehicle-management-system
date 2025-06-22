@@ -261,7 +261,7 @@ const CarDetails = () => {
           onClose={() => setShowChat(false)}
           currentUserId = {currentUserId}
           carRole = {car.role}
-          carOwnerId={car.postedBy || car.createdBy}
+          carOwnerId={car.ownerId || car.postedBy || car.createdBy}
         />
       )}
     </div>

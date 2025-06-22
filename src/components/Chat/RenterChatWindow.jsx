@@ -15,6 +15,7 @@ import {
   FaUser,
   FaUserShield,
   FaArrowLeft,
+  FaCar,
 } from "react-icons/fa";
 
 const RenterChatWindow = ({ selectedChat, onBackToSidebar }) => {
@@ -118,23 +119,58 @@ const RenterChatWindow = ({ selectedChat, onBackToSidebar }) => {
 
   if (!selectedChat) {
     return (
-      <div className="h-full flex flex-col items-center justify-center bg-gray-50">
-        <div className="text-center p-8">
-          <div className="text-6xl text-gray-300 mb-4">🚗</div>
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">
+      <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
+        <div className="text-center max-w-md mx-auto">
+    
+          <div className="bg-blue-100 p-6 sm:p-8 rounded-full inline-flex mb-6 sm:mb-8">
+            <FaCar className="text-3xl sm:text-4xl lg:text-5xl text-blue-600" />
+          </div>
+          
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
             Select a rental inquiry to start chatting
           </h3>
-          <p className="text-gray-500 max-w-md mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6 sm:mb-8">
             Choose a conversation from the sidebar to view and respond to
             customer messages about your rental cars.
           </p>
 
+ 
           <button
             onClick={onBackToSidebar}
-            className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg flex items-center gap-2 mx-auto md:hidden"
+            className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 shadow-sm md:hidden"
           >
-            <FaArrowLeft />
-            <span>Back to Conversations</span>
+            <FaArrowLeft className="text-sm" />
+            <span className="text-sm sm:text-base">Back to Conversations</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+// ...existing code...
+  if (!selectedChat) {
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
+        <div className="text-center max-w-md mx-auto">
+          {/* Professional Car Icon */}
+          <div className="bg-blue-100 p-6 sm:p-8 rounded-full inline-flex mb-6 sm:mb-8">
+            <FaCar className="text-3xl sm:text-4xl lg:text-5xl text-blue-600" />
+          </div>
+          
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
+            Select a rental inquiry to start chatting
+          </h3>
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6 sm:mb-8">
+            Choose a conversation from the sidebar to view and respond to
+            customer messages about your rental cars.
+          </p>
+
+          {/* Mobile Back Button */}
+          <button
+            onClick={onBackToSidebar}
+            className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 shadow-sm md:hidden"
+          >
+            <FaArrowLeft className="text-sm" />
+            <span className="text-sm sm:text-base">Back to Conversations</span>
           </button>
         </div>
       </div>
@@ -142,96 +178,131 @@ const RenterChatWindow = ({ selectedChat, onBackToSidebar }) => {
   }
 
   return (
-    <div className="h-full flex flex-col bg-white">
-      <div className="p-4 border-b border-gray-200 bg-white flex items-center gap-3">
+    <div className="h-full w-full flex flex-col bg-white shadow-sm">
+      {/* Header - Fixed height */}
+      <div className="flex-shrink-0 p-3 sm:p-4 lg:p-5 border-b border-gray-200 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white flex items-center gap-3 sm:gap-4 min-h-[60px] sm:min-h-[70px] lg:min-h-[75px]">
+        {/* Mobile Back Button */}
         <button
           onClick={onBackToSidebar}
-          className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 md:hidden"
+          className="p-2 text-white hover:bg-blue-700 rounded-full transition-colors duration-200 flex-shrink-0 md:hidden"
         >
-          <FaArrowLeft />
+          <FaArrowLeft className="text-sm sm:text-base" />
         </button>
 
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-800 m-0">
-            {selectedChat.carName}
-          </h3>
-          <div className="flex items-center text-sm text-gray-600 mt-1">
-            <FaUser className="mr-1 text-xs" />
-            <span>Chatting with {selectedChat.buyerName}</span>
+        {/* Chat Info */}
+        <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+          <div className="bg-blue-500 p-2 sm:p-2.5 rounded-full flex-shrink-0">
+            <FaCar className="text-white text-sm sm:text-base lg:text-lg" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm sm:text-base lg:text-lg font-semibold m-0 truncate">
+              {selectedChat.carName}
+            </h3>
+            <div className="flex items-center text-xs sm:text-sm text-blue-100 mt-0.5 sm:mt-1">
+              <FaUser className="mr-1 sm:mr-2 text-xs flex-shrink-0" />
+              <span className="truncate">Chatting with {selectedChat.buyerName}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div
-        className="flex-1 overflow-y-auto p-4 bg-gray-50"
+      {/* Messages Container - Takes remaining height */}
+      <div 
+        className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 bg-gray-50 min-h-0"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {messages.length === 0 ? (
-          <div className="text-center text-gray-500 mt-20">
-            <p className="text-base mb-3">
-              No messages yet in this conversation
-            </p>
-            <small className="text-sm opacity-70">
-              Start the conversation by sending a message below
-            </small>
+          <div className="h-full flex items-center justify-center text-gray-500">
+            <div className="text-center">
+              <div className="bg-gray-200 p-4 sm:p-6 rounded-full inline-flex mb-4 sm:mb-6">
+                <FaUser className="text-2xl sm:text-3xl text-gray-400" />
+              </div>
+              <p className="text-sm sm:text-base lg:text-lg mb-2 sm:mb-3 font-medium">
+                No messages yet in this conversation
+              </p>
+              <small className="text-xs sm:text-sm text-gray-400 block max-w-xs mx-auto leading-relaxed">
+                Start the conversation by sending a message below
+              </small>
+            </div>
           </div>
         ) : (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`mb-4 max-w-[80%] ${
-                message.senderId === currentUser?.uid ? "ml-auto" : "mr-auto"
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-2 text-xs text-gray-600">
-                {message.senderRole === "renter" ? (
-                  <FaUserShield className="w-4 h-4 text-orange-500" />
-                ) : (
-                  <FaUser className="w-4 h-4 text-blue-500" />
-                )}
-                <span className="font-semibold">{message.senderName}</span>
-                <span className="text-gray-400 ml-auto">
-                  {formatTime(message.timestamp)}
-                </span>
-              </div>
+          <div className="space-y-4 sm:space-y-6 pb-4">
+            {messages.map((message) => (
               <div
-                className={`p-3 rounded-2xl shadow-sm break-words ${
-                  message.senderId === currentUser?.uid
-                    ? "bg-orange-500 text-white"
-                    : "bg-white text-gray-800 border border-gray-200"
+                key={message.id}
+                className={`flex flex-col max-w-[85%] sm:max-w-[75%] lg:max-w-[70%] ${
+                  message.senderRole === "renter"
+                    ? "ml-auto items-end" 
+                    : "mr-auto items-start"
                 }`}
               >
-                {message.text}
+                {/* Message Header */}
+                <div className={`flex items-center gap-2 mb-2 text-xs sm:text-sm text-gray-600 ${
+                  message.senderRole === "renter" ? "flex-row-reverse" : ""
+                }`}>
+                  {message.senderRole === "renter" ? (
+                    <FaUserShield className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />
+                  ) : (
+                    <FaUser className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                  )}
+                  <span className="font-medium text-xs sm:text-sm">
+                    {message.senderName}
+                  </span>
+                  <span className="text-gray-400 text-xs">
+                    {formatTime(message.timestamp)}
+                  </span>
+                </div>
+
+                {/* Message Bubble */}
+                <div
+                  className={`p-3 sm:p-4 rounded-2xl shadow-sm break-words text-sm sm:text-base leading-relaxed ${
+                    message.senderRole === "renter"
+                      ? "bg-blue-600 text-white rounded-br-sm"
+                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm"
+                  }`}
+                >
+                  {message.text}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-gray-200 bg-white">
-        <div className="flex gap-3 items-center">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your response..."
-            disabled={isLoading}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors duration-200 focus:border-orange-500 disabled:bg-gray-50"
-          />
+      {/* Message Input - Fixed height */}
+      <div className="flex-shrink-0 p-3 sm:p-4 lg:p-5 border-t border-gray-200 bg-white">
+        <div className="flex gap-2 sm:gap-3 items-end">
+          <div className="flex-1 relative">
+            <textarea
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Type your response..."
+              disabled={isLoading}
+              rows="1"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl resize-none outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50 text-sm sm:text-base min-h-[40px] sm:min-h-[44px]"
+              style={{ 
+                maxHeight: "120px",
+                overflowY: "auto"
+              }}
+            />
+          </div>
+          
           <button
             onClick={sendMessage}
             disabled={isLoading || !newMessage.trim()}
-            className="bg-orange-500 text-white border-0 rounded-lg px-4 py-2 flex items-center gap-2 cursor-pointer transition-all duration-200 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-xl px-3 sm:px-4 lg:px-5 py-2 sm:py-3 flex items-center gap-2 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex-shrink-0 min-h-[40px] sm:min-h-[44px]"
           >
-            <FaPaperPlane />
-            <span className="hidden sm:inline">Send</span>
+            <FaPaperPlane className="text-sm" />
+            <span className="hidden sm:inline text-sm sm:text-base">Send</span>
           </button>
         </div>
       </div>
     </div>
   );
+// ...existing code...
+
 };
 
 export default RenterChatWindow;

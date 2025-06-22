@@ -4,8 +4,6 @@ import { useState } from "react";
 import LandingPage from "./components/LandingPage/LandingPage";
 import SignUp from "./pages/auth/SignUp/SignUp";
 import Login from "./pages/auth/Login/Login";
-import Reset from "./pages/auth/reset/reset";
-import Otp from "./pages/auth/otp/Otp";
 import AdminDashboard from "./pages/Admin/Admin";
 import AdminNotifications from './pages/Admin/AdminNotifications/AdminNotifications'
 import CarList from "./components/CarListing/CarList";
@@ -37,9 +35,6 @@ const App = () => {
           path="/login"
           element={<Login setIsAuthenticated={setIsAuthenticated} />}
         />
-        <Route path="/reset" element={<Reset />} />
-        <Route path="/otp" element={<Otp />} />
-
         <Route
           path="/admin"
           element={
@@ -49,7 +44,7 @@ const App = () => {
           }
         />
         <Route
-          path="/buyer-profile"
+          path="/purchaser-profile"
           element={
             <Protected isAuthenticated={isAuthenticated}>
               <Profile userRole="buyer" />
@@ -66,7 +61,7 @@ const App = () => {
           }
         />
         <Route
-          path="/buyer-dashboard"
+          path="/purchaser-dashboard"
           element={
             <Protected isAuthenticated={isAuthenticated}>
               <BuyerDashboard role="buyer" />

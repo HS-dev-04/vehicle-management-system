@@ -11,9 +11,9 @@ const AdminDashboard = ({ role }) => {
     <div className="d-flex" style={{ minHeight: "100vh" }}>
       <Sidebar role={role} />
 
-      <div className="flex-grow-1 p-4">
+      <div className="flex-grow-1 d-flex flex-column" style={{ minHeight: "100vh" }}>
        
-        <div className="mb-4">
+        <div className="mb-4 p-4 pb-0">
           <ul className="nav nav-tabs">
             <li className="nav-item">
               <button 
@@ -35,19 +35,23 @@ const AdminDashboard = ({ role }) => {
         </div>
 
         {activeTab === "dashboard" && (
-          <>
+          <div className="flex-grow-1 p-4 pt-0">
             <h2>Dashboard</h2>
             <p>Welcome to the {role} dashboard. Use the sidebar to navigate.</p>
             <CarList/>
-          </>
+          </div>
         )}
 
         {activeTab === "chats" && (
-          <>
-            <h2>Customer Inquiries</h2>
-            <p>Manage customer chat inquiries about specific cars</p>
-            <AdminChatInterface />
-          </>
+          <div className="flex-grow-1 d-flex flex-column" style={{ minHeight: 0 }}>
+            <div className="px-4 pb-2">
+              <h2 className="mb-1">Customer Inquiries</h2>
+              <p className="mb-3">Manage customer chat inquiries about specific cars</p>
+            </div>
+            <div className="flex-grow-1" style={{ minHeight: 0 }}>
+              <AdminChatInterface />
+            </div>
+          </div>
         )}
       </div>
     </div>
